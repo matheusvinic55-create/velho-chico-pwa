@@ -1,0 +1,35 @@
+{
+  "id": "./",
+  "name": "Velho Chico - A Alma do Rio",
+  "short_name": "Velho Chico",
+  "description": "Uma travessia por Velho Chico e pelas aguas do Sao Francisco.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#fbf7ee",
+  "theme_color": "#173c3b",
+  "categories": ["entertainment", "books", "lifestyle"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
