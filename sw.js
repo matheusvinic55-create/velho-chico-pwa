@@ -1,4 +1,4 @@
-const CACHE_VERSION = "velho-chico-v3";
+const CACHE_VERSION = "velho-chico-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
