@@ -967,13 +967,40 @@
       line-height: 1.47;
     }
     .chat-bubble time {
-      display: block;
-      margin-top: 4px;
       color: var(--muted);
       font-size: .61rem;
-      text-align: right;
     }
     .chat-message.user .chat-bubble time { color: rgba(255,255,255,.5); }
+    .chat-meta {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .chat-speak {
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(23,60,59,.18);
+      border-radius: 50%;
+      color: var(--river);
+      background: rgba(23,60,59,.06);
+      font-size: .66rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .chat-speak.speaking {
+      color: white;
+      border-color: var(--terracotta);
+      background: var(--terracotta);
+    }
+    .chat-speak:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
     .chat-message.typing .chat-bubble {
       display: flex;
       align-items: center;
@@ -2006,6 +2033,8 @@
         createdAt: new Date().toISOString()
       };
       let chat = [];
+      let speakingMessageId = null;
+      let speechRun = 0;
 
       try { chat = JSON.parse(localStorage.getItem("barDoChicoChat") || "[]"); }
       catch (_) { chat = []; }
@@ -2021,6 +2050,87 @@
           hour: "2-digit",
           minute: "2-digit"
         }).format(new Date(iso));
+      }
+
+      function stopChatSpeech() {
+        speechRun += 1;
+        speakingMessageId = null;
+        window.speechSynthesis?.cancel();
+        $$(".chat-speak").forEach(button => {
+          button.classList.remove("speaking");
+          button.textContent = "▶";
+          button.setAttribute("aria-label", "Ouvir mensagem do Chico");
+          button.title = "Ouvir mensagem";
+        });
+      }
+
+      function speechChunks(text, limit = 180) {
+        const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+        const chunks = [];
+        let current = "";
+
+        sentences.forEach(sentence => {
+          const words = sentence.trim().split(/\s+/);
+          words.forEach(word => {
+            const next = current ? `${current} ${word}` : word;
+            if (next.length > limit && current) {
+              chunks.push(current);
+              current = word;
+            } else {
+              current = next;
+            }
+          });
+        });
+        if (current) chunks.push(current);
+        return chunks;
+      }
+
+      function speakChatMessage(message) {
+        if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+          showToast("A leitura em voz alta não está disponível neste aparelho.");
+          return;
+        }
+        if (speakingMessageId === String(message.id)) {
+          stopChatSpeech();
+          return;
+        }
+
+        stopChatSpeech();
+        speakingMessageId = String(message.id);
+        const run = speechRun;
+        const chunks = speechChunks(message.text);
+        let index = 0;
+
+        const activeButton = document.querySelector(`.chat-speak[data-message-id="${CSS.escape(String(message.id))}"]`);
+        if (activeButton) {
+          activeButton.classList.add("speaking");
+          activeButton.textContent = "■";
+          activeButton.setAttribute("aria-label", "Parar leitura");
+          activeButton.title = "Parar leitura";
+        }
+
+        const speakNext = () => {
+          if (run !== speechRun || index >= chunks.length) {
+            if (run === speechRun) stopChatSpeech();
+            return;
+          }
+          const utterance = new SpeechSynthesisUtterance(chunks[index]);
+          const voices = window.speechSynthesis.getVoices();
+          utterance.voice = voices.find(voice => voice.lang.toLowerCase() === "pt-br") ||
+            voices.find(voice => voice.lang.toLowerCase().startsWith("pt")) || null;
+          utterance.lang = "pt-BR";
+          utterance.rate = .94;
+          utterance.pitch = .92;
+          utterance.onend = () => {
+            index += 1;
+            speakNext();
+          };
+          utterance.onerror = () => {
+            if (run === speechRun) stopChatSpeech();
+          };
+          window.speechSynthesis.speak(utterance);
+        };
+        speakNext();
       }
 
       function renderChat() {
@@ -2042,7 +2152,23 @@
           time.dateTime = message.createdAt;
           time.textContent = chatTime(message.createdAt);
 
-          bubble.append(name, text, time);
+          const meta = document.createElement("div");
+          meta.className = "chat-meta";
+          if (message.role === "chico") {
+            const speak = document.createElement("button");
+            speak.type = "button";
+            speak.className = "chat-speak";
+            speak.dataset.messageId = String(message.id);
+            speak.textContent = speakingMessageId === String(message.id) ? "■" : "▶";
+            speak.setAttribute("aria-label", speakingMessageId === String(message.id) ? "Parar leitura" : "Ouvir mensagem do Chico");
+            speak.title = speakingMessageId === String(message.id) ? "Parar leitura" : "Ouvir mensagem";
+            if (speakingMessageId === String(message.id)) speak.classList.add("speaking");
+            speak.addEventListener("click", () => speakChatMessage(message));
+            meta.append(speak);
+          }
+          meta.append(time);
+
+          bubble.append(name, text, meta);
           row.append(bubble);
           chatMessages.append(row);
         });
@@ -2493,6 +2619,7 @@
       $("#clearChat").addEventListener("click", () => {
         if (!confirm("Limpar toda a conversa do Bar do Chico?")) return;
         window.clearTimeout(replyTimer);
+        stopChatSpeech();
         finishPendingReply();
         chat = [{ ...openingMessage, createdAt: new Date().toISOString() }];
         conversationMemory.character = "";
