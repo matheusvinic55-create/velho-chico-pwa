@@ -2419,7 +2419,28 @@
         $("#chatTyping")?.remove();
       }
 
-      function sendChatMessage() {
+      async function requestChicoReply() {
+        const messages = chat
+          .filter(message => message.id !== "abertura")
+          .slice(-10)
+          .map(message => ({
+            role: message.role === "chico" ? "assistant" : "user",
+            content: message.text
+          }));
+
+        const response = await fetch("/api/chico", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages })
+        });
+
+        if (!response.ok) throw new Error(`Chico indisponível (${response.status})`);
+        const data = await response.json();
+        if (!data.reply || typeof data.reply !== "string") throw new Error("Resposta vazia");
+        return data.reply.trim();
+      }
+
+      async function sendChatMessage() {
         if (replyPending) {
           showToast("Chico ainda está pensando nessa prosa.");
           return;
@@ -2435,17 +2456,26 @@
         saveChat();
         renderChat();
 
-        const reply = guidedReply(text);
         replyPending = true;
         $("#sendChat").disabled = true;
         showChatTyping();
-        const thinkingTime = Math.min(1500, 620 + text.length * 9);
-        replyTimer = window.setTimeout(() => {
+
+        try {
+          const reply = await requestChicoReply();
           finishPendingReply();
           chat.push({ id: Date.now() + 1, role: "chico", text: reply, createdAt: new Date().toISOString() });
           saveChat();
           renderChat();
-        }, thinkingTime);
+        } catch (_) {
+          const reply = guidedReply(text);
+          const thinkingTime = Math.min(1200, 480 + text.length * 6);
+          replyTimer = window.setTimeout(() => {
+            finishPendingReply();
+            chat.push({ id: Date.now() + 1, role: "chico", text: reply, createdAt: new Date().toISOString() });
+            saveChat();
+            renderChat();
+          }, thinkingTime);
+        }
       }
 
       $("#sendChat").addEventListener("click", sendChatMessage);
