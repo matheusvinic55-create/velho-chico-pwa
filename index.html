@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#173c3b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Velho Chico" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <title>Velho Chico | A alma do rio</title>
+  <style>
+    :root {
+      --river: #173c3b;
+      --river-2: #245653;
+      --night: #102321;
+      --sand: #ead9bb;
+      --paper: #fbf7ee;
+      --paper-2: #f4ecdc;
+      --gold: #c98f45;
+      --terracotta: #a95536;
+      --ink: #1d2c2a;
+      --muted: #66726e;
+      --line: rgba(29, 44, 42, .14);
+      --white: #fffdf8;
+      --shadow: 0 18px 50px rgba(16, 35, 33, .13);
+      --radius: 26px;
+      --serif: ui-serif, Georgia, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 4%, rgba(201,143,69,.10), transparent 32%),
+        var(--paper);
+      font-family: var(--sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, textarea { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+
+    .skip {
+      position: fixed;
+      left: 12px;
+      top: -100px;
+      z-index: 999;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+    }
+    .skip:focus { top: 12px; }
+
+    .hero {
+      position: relative;
+      min-height: min(760px, 89svh);
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      color: var(--white);
+      background:
+        linear-gradient(180deg, rgba(5,19,18,.06) 0%, rgba(5,19,18,.28) 42%, rgba(5,19,18,.92) 100%),
+        linear-gradient(135deg, #396c67, #173c3b 56%, #0c2422);
+      isolation: isolate;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -4;
+      background-image:
+        radial-gradient(circle at 76% 16%, rgba(255,225,165,.42) 0 7%, transparent 7.4%),
+        linear-gradient(167deg, transparent 0 56%, rgba(235,215,182,.17) 56.3% 57.2%, transparent 57.5%),
+        repeating-radial-gradient(ellipse at 52% 110%, transparent 0 26px, rgba(255,255,255,.06) 27px 29px, transparent 30px 48px);
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .hero-photo.visible { display: block; }
+    .hero-shade {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(180deg, rgba(7,20,19,.03), rgba(7,20,19,.20) 48%, rgba(7,20,19,.93)),
+        linear-gradient(90deg, rgba(7,20,19,.36), transparent 68%);
+    }
+    .boat-art {
+      position: absolute;
+      z-index: -1;
+      right: -35px;
+      bottom: 105px;
+      width: min(78vw, 570px);
+      opacity: .42;
+      filter: drop-shadow(0 20px 35px rgba(0,0,0,.25));
+    }
+    .hero.has-photo .boat-art { opacity: 0; }
+
+    .topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: calc(18px + env(safe-area-inset-top)) 20px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 5;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 780;
+      letter-spacing: .07em;
+      font-size: .82rem;
+      text-transform: uppercase;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,.4);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.08);
+      color: white;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .brand-mark:active { transform: scale(.94); }
+    .brand-mark:focus-visible,
+    .drawer-close:focus-visible,
+    .drawer-nav a:focus-visible {
+      outline: 2px solid #efc783;
+      outline-offset: 3px;
+    }
+    .icon-button {
+      min-width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 50%;
+      background: rgba(12,36,34,.28);
+      color: white;
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(14px);
+      cursor: pointer;
+    }
+    .icon-button svg {
+      width: 23px;
+      height: 23px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .hero-content {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 160px 22px calc(72px + env(safe-area-inset-bottom));
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .72rem;
+      font-weight: 760;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(4.1rem, 17vw, 9.4rem);
+      line-height: .78;
+      letter-spacing: -.072em;
+      margin: 28px 0 24px;
+      max-width: 850px;
+      text-wrap: balance;
+    }
+    .hero h1 span {
+      display: block;
+      margin-left: clamp(16px, 8vw, 90px);
+      color: #efc783;
+      font-style: italic;
+      font-weight: 500;
+    }
+    .hero-intro {
+      max-width: 590px;
+      font-size: clamp(1rem, 3.6vw, 1.22rem);
+      color: rgba(255,255,255,.80);
+      margin: 0 0 28px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 19px;
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-weight: 760;
+      cursor: pointer;
+      transition: transform .18s ease, filter .18s ease, background .18s ease;
+    }
+    .button:active { transform: scale(.975); }
+    .button-primary {
+      color: #17302e;
+      background: #efc783;
+      box-shadow: 0 12px 32px rgba(0,0,0,.20);
+    }
+    .button-ghost {
+      color: white;
+      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+    }
+    .button-dark {
+      color: white;
+      background: var(--river);
+    }
+    .button-soft {
+      color: var(--river);
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+    }
+    input[type=file] { display: none; }
+
+    body.menu-open { overflow: hidden; }
+    .menu-toggle {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(7, 20, 19, .56);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .28s ease, visibility .28s ease;
+    }
+    .menu-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .menu-toggle:checked ~ .menu-overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+    .menu-drawer {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 91;
+      width: min(84vw, 360px);
+      padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
+      color: var(--white);
+      background:
+        radial-gradient(circle at 10% 5%, rgba(239,199,131,.17), transparent 30%),
+        linear-gradient(165deg, var(--river-2), var(--night) 72%);
+      box-shadow: 24px 0 60px rgba(5, 18, 17, .32);
+      transform: translateX(-105%);
+      transition: transform .32s cubic-bezier(.22,.8,.28,1);
+      overflow-y: auto;
+    }
+    .menu-drawer.visible { transform: translateX(0); }
+    .menu-toggle:checked ~ .menu-drawer { transform: translateX(0); }
+    .swipe-cue {
+      position: fixed;
+      right: 0;
+      top: 48%;
+      z-index: 45;
+      width: 24px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px 0 0 16px;
+      color: rgba(255,255,255,.88);
+      background: rgba(23,60,59,.72);
+      box-shadow: -5px 6px 18px rgba(16,35,33,.12);
+      backdrop-filter: blur(10px);
+      font-family: var(--serif);
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: .72;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .swipe-cue::before {
+      content: "‹";
+      transform: translateX(-1px);
+    }
+    .swipe-cue:active { opacity: 1; transform: translateX(-3px); }
+    .menu-toggle:checked ~ .swipe-cue {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .drawer-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 23px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+    }
+    .drawer-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .drawer-wave {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #efc783;
+      border: 1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.07);
+      font-family: var(--serif);
+      font-size: 1.25rem;
+    }
+    .drawer-close {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      color: white;
+      font-size: 1.35rem;
+      cursor: pointer;
+    }
+    .drawer-caption {
+      margin: 25px 3px 11px;
+      color: rgba(255,255,255,.5);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .drawer-nav { display: grid; gap: 5px; }
+    .drawer-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 53px;
+      padding: 12px 14px;
+      border-radius: 15px;
+      color: rgba(255,255,255,.86);
+      font-family: var(--serif);
+      font-size: 1.28rem;
+      transition: color .18s ease, background .18s ease, transform .18s ease;
+    }
+    .drawer-nav a::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      flex: 0 0 8px;
+      border-radius: 50%;
+      background: var(--nav-tone, #efc783);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--nav-tone, #efc783) 16%, transparent);
+    }
+    .drawer-nav a:nth-child(1) { --nav-tone: #efc783; }
+    .drawer-nav a:nth-child(2) { --nav-tone: #d7ad70; }
+    .drawer-nav a:nth-child(3) { --nav-tone: #b96845; }
+    .drawer-nav a:nth-child(4) { --nav-tone: #d59a38; }
+    .drawer-nav a:nth-child(5) { --nav-tone: #6c927a; }
+    .drawer-nav a:nth-child(6) { --nav-tone: #2f6662; }
+    .drawer-nav a:nth-child(7) { --nav-tone: #ad7257; }
+    .drawer-nav a::after {
+      content: "→";
+      margin-left: auto;
+      color: #efc783;
+      font-family: var(--sans);
+      font-size: 1rem;
+      opacity: .75;
+    }
+    .drawer-nav a:active {
+      transform: translateX(3px);
+      color: white;
+      background: rgba(255,255,255,.09);
+    }
+    .drawer-footer {
+      margin: 28px 4px 0;
+      padding: 20px 2px 6px;
+      border-top: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.7);
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-style: italic;
+      font-weight: 450;
+      line-height: 1.35;
+      letter-spacing: .01em;
+    }
+
+    main { overflow: clip; }
+    .section {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 76px 20px;
+      position: relative;
+      isolation: isolate;
+    }
+    .section::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset-block: 0;
+      left: 50%;
+      width: 100vw;
+      transform: translateX(-50%);
+      background: var(--section-tone, var(--paper));
+    }
+    #sinopse { --section-tone: #f8edda; --section-accent: #b77443; }
+    #resumos { --section-tone: #f0ddca; --section-accent: #a9573b; }
+    #trilha  { --section-tone: #f5e2bd; --section-accent: #bd7e25; }
+    #elenco  { --section-tone: #e3ece5; --section-accent: #416f5c; }
+    #bar     { --section-tone: #efddd3; --section-accent: #985a43; }
+    .section + .section { border-top: 1px solid var(--line); }
+    .section-kicker {
+      margin: 0 0 9px;
+      color: var(--section-accent, var(--terracotta));
+      font-size: .76rem;
+      font-weight: 820;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-weight: 560;
+      font-size: clamp(2.25rem, 8vw, 4.6rem);
+      line-height: .96;
+      letter-spacing: -.045em;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .section-lead {
+      color: var(--muted);
+      font-size: 1.06rem;
+      max-width: 700px;
+      margin: 18px 0 0;
+    }
+
+    .synopsis-grid {
+      display: grid;
+      gap: 28px;
+      margin-top: 34px;
+    }
+    .quote-card {
+      position: relative;
+      overflow: hidden;
+      min-height: auto;
+      border-radius: 0;
+      border-left: 3px solid var(--river-2);
+      padding: 12px 16px 12px 24px;
+      color: var(--river);
+      background: transparent;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+    .quote-card::after {
+      content: "≈";
+      position: absolute;
+      right: 4px;
+      bottom: -28px;
+      font-family: var(--serif);
+      font-size: 9rem;
+      color: rgba(23,60,59,.07);
+      transform: rotate(-8deg);
+    }
+    .quote-card blockquote {
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 6vw, 2.5rem);
+      line-height: 1.08;
+      margin: 0;
+      max-width: 650px;
+    }
+    .quote-card cite {
+      font-style: normal;
+      color: var(--muted);
+      font-size: .8rem;
+      letter-spacing: .02em;
+    }
+    .fact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .fact {
+      position: relative;
+      min-height: auto;
+      display: grid;
+      grid-template-columns: minmax(86px, .7fr) 1.8fr;
+      align-items: start;
+      gap: 14px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 17px 2px 23px;
+    }
+    .fact:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 7px;
+      opacity: .24;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 C6 0 12 0 18 4 S30 8 36 4 S42 0 48 4' fill='none' stroke='%23173c3b' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      background-position: left center;
+      background-size: 48px 8px;
+    }
+    .fact strong {
+      display: block;
+      font-family: var(--serif);
+      color: var(--river);
+      font-size: 1.22rem;
+      line-height: 1.12;
+      margin: 0;
+    }
+    .fact span {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.48;
+    }
+
+    .progress-card {
+      margin-top: 32px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 10px 32px rgba(16,35,33,.06);
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: end;
+      margin-bottom: 13px;
+    }
+    .progress-top strong { font-size: 1.02rem; }
+    .progress-top span { color: var(--muted); font-size: .82rem; }
+    .track {
+      height: 10px;
+      background: var(--paper-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .track > i {
+      display: block;
+      width: 82%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--terracotta), var(--gold));
+      border-radius: inherit;
+    }
+
+    .chapter-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    details.chapter, details.album {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 21px;
+      overflow: hidden;
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    details[open] { box-shadow: 0 16px 42px rgba(16,35,33,.09); }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .chapter summary, .album summary {
+      padding: 19px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+    }
+    .chapter-number {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--paper-2);
+      color: var(--terracotta);
+      font-weight: 830;
+    }
+    .chapter-name strong, .album-name strong { display: block; }
+    .chapter-name span, .album-name span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    .chevron {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--paper-2);
+      transition: transform .2s ease;
+    }
+    details[open] .chevron { transform: rotate(45deg); }
+    .chapter-body, .album-body {
+      padding: 0 20px 22px 80px;
+      color: #41504c;
+    }
+    .chapter-body p:first-child, .album-body p:first-child { margin-top: 0; }
+    .chapter-body ul { padding-left: 18px; margin-bottom: 0; }
+    .chapter-body li + li { margin-top: 8px; }
+
+    .album-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .album-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(145deg, var(--terracotta), var(--gold));
+      box-shadow: 0 8px 20px rgba(169,85,54,.20);
+    }
+    .song-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: song;
+      display: grid;
+      gap: 2px;
+    }
+    .song-list li {
+      counter-increment: song;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr) 36px;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .song-list li::before {
+      content: counter(song, decimal-leading-zero);
+      color: var(--gold);
+      font-size: .72rem;
+      font-weight: 800;
+      padding-top: 3px;
+    }
+    .song-list li:last-child { border-bottom: 0; }
+    .song-list small { color: var(--muted); display: block; margin-top: 2px; }
+    .song-play {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(23,60,59,.16);
+      border-radius: 50%;
+      color: var(--river);
+      background: rgba(23,60,59,.055);
+      font-size: .68rem;
+      line-height: 1;
+      padding-left: 2px;
+      transition: transform .18s ease, color .18s ease, background .18s ease;
+    }
+    .song-play:active {
+      transform: scale(.92);
+      color: white;
+      background: var(--river);
+    }
+    .song-play:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .cast-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: 30px;
+    }
+    .person {
+      position: relative;
+      min-height: 88px;
+      padding: 12px 2px 20px;
+      color: var(--ink);
+      background: transparent;
+      display: grid;
+      grid-template-columns: 66px minmax(0, 1fr);
+      align-items: center;
+      gap: 15px;
+    }
+    .person:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 1px;
+      height: 7px;
+      opacity: .24;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 C6 0 12 0 18 4 S30 8 36 4 S42 0 48 4' fill='none' stroke='%23173c3b' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      background-position: left center;
+      background-size: 48px 8px;
+    }
+    .person-photo {
+      width: 66px;
+      height: 66px;
+      display: block;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      border: 2px solid var(--white);
+      background: var(--paper-2);
+      box-shadow: 0 5px 16px rgba(16,35,33,.14);
+    }
+    .person-photo.focus-right { object-position: 72% center; }
+    .person-photo.focus-left { object-position: 28% center; }
+    .person-copy { min-width: 0; }
+    .person strong {
+      display: block;
+      font-family: var(--serif);
+      color: var(--river);
+      font-size: 1.2rem;
+      line-height: 1.08;
+    }
+    .person span {
+      display: block;
+      color: var(--muted);
+      font-size: .79rem;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .feature-section {
+      width: 100%;
+      padding: 80px 0;
+      background:
+        radial-gradient(circle at 88% 6%, rgba(239,199,131,.14), transparent 25%),
+        var(--night);
+      color: white;
+    }
+    .feature-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .feature-section .section-kicker { color: #efc783; }
+    .feature-section .section-lead { color: rgba(255,255,255,.64); }
+
+    .quiz-card {
+      margin-top: 32px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 28px;
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(12px);
+    }
+    .question { display: none; }
+    .question.active { display: block; animation: appear .28s ease; }
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,.58);
+      font-size: .78rem;
+      margin-bottom: 14px;
+    }
+    .question h3 {
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 6vw, 2.4rem);
+      line-height: 1.08;
+      margin: 0 0 18px;
+      font-weight: 540;
+    }
+    .answers { display: grid; gap: 10px; }
+    .answer {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 17px;
+      padding: 15px;
+      color: white;
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+    }
+    .answer:active { background: rgba(255,255,255,.13); }
+    .quiz-result {
+      display: none;
+      text-align: center;
+      padding: 15px 4px 4px;
+    }
+    .quiz-result.visible { display: block; animation: appear .35s ease; }
+    .result-photo {
+      width: 94px;
+      height: 94px;
+      display: block;
+      margin: 0 auto 17px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      border: 3px solid #efc783;
+      background: var(--river-2);
+      box-shadow: 0 17px 44px rgba(0,0,0,.22);
+    }
+    .quiz-result h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 2.35rem;
+      font-weight: 520;
+    }
+    .quiz-result p {
+      color: rgba(255,255,255,.68);
+      max-width: 610px;
+      margin: 12px auto 22px;
+    }
+
+    .bar-card {
+      margin-top: 32px;
+      display: grid;
+      gap: 13px;
+    }
+    .chat-shell {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .chat-head {
+      padding: 15px 17px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      background:
+        radial-gradient(circle at 92% 10%, rgba(239,199,131,.18), transparent 31%),
+        linear-gradient(145deg, var(--river-2), var(--night));
+    }
+    .chat-avatar {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      display: block;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.58);
+      background: rgba(255,255,255,.10);
+      object-fit: cover;
+      object-position: center;
+      box-shadow: 0 5px 16px rgba(0,0,0,.2);
+    }
+    .chat-identity strong { display: block; font-size: .96rem; }
+    .chat-identity span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+      color: rgba(255,255,255,.62);
+      font-size: .72rem;
+    }
+    .chat-identity span::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #8fc9a7;
+      box-shadow: 0 0 0 3px rgba(143,201,167,.12);
+    }
+    .chat-messages {
+      min-height: 340px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(201,143,69,.08), transparent 30%),
+        var(--paper);
+      scrollbar-width: thin;
+    }
+    .chat-message { display: flex; }
+    .chat-message.user { justify-content: flex-end; }
+    .chat-bubble {
+      width: fit-content;
+      max-width: 86%;
+      padding: 10px 12px 8px;
+      border-radius: 17px 17px 17px 5px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 5px 15px rgba(16,35,33,.055);
+    }
+    .chat-message.user .chat-bubble {
+      color: white;
+      border-color: transparent;
+      border-radius: 17px 17px 5px 17px;
+      background: var(--river);
+    }
+    .chat-bubble strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--terracotta);
+      font-size: .7rem;
+    }
+    .chat-message.user .chat-bubble strong { color: #efc783; }
+    .chat-bubble p {
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: .9rem;
+      line-height: 1.47;
+    }
+    .chat-bubble time {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .61rem;
+      text-align: right;
+    }
+    .chat-message.user .chat-bubble time { color: rgba(255,255,255,.5); }
+    .chat-message.typing .chat-bubble {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 58px;
+      padding: 14px 15px;
+    }
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      animation: typingPulse 1.1s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .16s; }
+    .typing-dot:nth-child(3) { animation-delay: .32s; }
+    @keyframes typingPulse {
+      0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-3px); }
+    }
+    .chat-suggestions {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 11px 13px 4px;
+      scrollbar-width: none;
+    }
+    .chat-suggestions::-webkit-scrollbar { display: none; }
+    .chat-prompt {
+      flex: 0 0 auto;
+      border: 1px solid rgba(23,60,59,.16);
+      border-radius: 999px;
+      padding: 8px 11px;
+      color: var(--river);
+      background: rgba(23,60,59,.045);
+      font-size: .75rem;
+      cursor: pointer;
+    }
+    .chat-compose {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 46px;
+      align-items: end;
+      gap: 9px;
+      padding: 9px 12px 13px;
+      background: var(--white);
+    }
+    .chat-compose textarea {
+      width: 100%;
+      min-height: 46px;
+      max-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      outline: 0;
+      padding: 12px 13px;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .chat-compose textarea:focus { border-color: rgba(36,86,83,.48); }
+    .chat-send {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: white;
+      background: var(--river);
+      font-size: 1rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .chat-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      padding: 0 4px;
+    }
+    .chat-action {
+      border: 0;
+      padding: 4px 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: .73rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .photo-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(5,19,18,.58);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+      align-items: flex-end;
+    }
+    .photo-panel.visible { display: flex; }
+    .sheet {
+      width: min(600px, 100%);
+      margin: 0 auto;
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 28px;
+      padding: 23px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.28);
+    }
+    .sheet h2 { font-family: var(--serif); margin: 0; font-size: 2rem; }
+    .sheet p { color: var(--muted); }
+    .sheet-actions { display: grid; gap: 10px; }
+
+    .river-footer {
+      position: relative;
+      isolation: isolate;
+      min-height: 520px;
+      overflow: hidden;
+      color: rgba(255,255,255,.72);
+      background: #133936;
+      text-align: center;
+      padding: 66px 20px calc(42px + env(safe-area-inset-bottom));
+    }
+    .footer-copy {
+      position: relative;
+      z-index: 3;
+      width: min(620px, 100%);
+      margin: 0 auto;
+    }
+    .footer-kicker {
+      display: block;
+      margin-bottom: 13px;
+      color: #efc783;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .river-footer strong {
+      display: block;
+      color: white;
+      font-family: var(--serif);
+      font-size: 2.45rem;
+      line-height: 1;
+      font-weight: 520;
+      margin-bottom: 13px;
+    }
+    .river-footer .footer-subtitle {
+      display: block;
+      max-width: 520px;
+      margin: 0 auto;
+      font-size: .98rem;
+      line-height: 1.5;
+    }
+    .river-landscape {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .footer-sun { opacity: .86; }
+    .footer-hill-back { fill: #2d5a4e; }
+    .footer-hill-front { fill: #214b43; }
+    .footer-bank { fill: #183f39; }
+    .footer-water { fill: #15505a; }
+    .footer-sun-path {
+      fill: none;
+      stroke: rgba(239,199,131,.28);
+      stroke-width: 18;
+      stroke-linecap: round;
+    }
+    .river-current {
+      fill: none;
+      stroke: rgba(255,255,255,.24);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 22 30;
+      animation: riverFlow 8s linear infinite;
+      vector-effect: non-scaling-stroke;
+    }
+    .river-current:nth-child(2) {
+      opacity: .72;
+      animation-duration: 11s;
+      animation-direction: reverse;
+    }
+    .river-current:nth-child(3) {
+      opacity: .48;
+      animation-duration: 14s;
+    }
+    .footer-boat-motion {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: boatOnRiver 7s ease-in-out infinite;
+    }
+    .footer-reeds {
+      fill: none;
+      stroke: #efc783;
+      stroke-width: 5;
+      stroke-linecap: round;
+      opacity: .52;
+    }
+    @keyframes riverFlow {
+      to { stroke-dashoffset: -208; }
+    }
+    @keyframes boatOnRiver {
+      0%, 100% { transform: translate(-18px, 1px) rotate(-.7deg); }
+      50% { transform: translate(22px, -5px) rotate(.7deg); }
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 999px;
+      color: white;
+      background: var(--night);
+      box-shadow: var(--shadow);
+      pointer-events: none;
+      transition: .25s ease;
+      text-align: center;
+      max-width: calc(100vw - 32px);
+      font-size: .88rem;
+    }
+    .toast.visible { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (min-width: 760px) {
+      .synopsis-grid { grid-template-columns: 1.35fr .65fr; }
+      .fact-grid { grid-template-columns: 1fr; }
+      .cast-grid { grid-template-columns: repeat(2, 1fr); column-gap: 28px; }
+      .bar-card { grid-template-columns: 1.1fr .9fr; align-items: start; }
+      .chapter-list { grid-template-columns: repeat(2, 1fr); }
+      .album-list { grid-template-columns: repeat(2, 1fr); }
+      .album-list details:last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .quiz-card { padding: 34px; }
+      .river-footer { min-height: 560px; padding-top: 82px; }
+      .river-footer strong { font-size: 3.15rem; }
+    }
+    @media (min-width: 1020px) {
+      .cast-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <input class="menu-toggle" id="menuToggle" type="checkbox" aria-hidden="true" tabindex="-1" />
+
+  <header class="hero" id="inicio">
+    <img id="heroPhoto" class="hero-photo" alt="Imagem escolhida para o cabeçalho do portal" />
+    <div class="hero-shade"></div>
+
+    <svg class="boat-art" viewBox="0 0 700 350" aria-hidden="true">
+      <path d="M68 222 C220 250 421 257 648 216 C598 282 494 313 345 312 C216 311 119 282 68 222Z" fill="rgba(255,255,255,.30)"/>
+      <path d="M342 215 L354 67 L365 215" fill="none" stroke="rgba(255,255,255,.36)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M358 75 C446 117 495 167 519 215 L366 213 Z" fill="rgba(239,199,131,.32)"/>
+      <path d="M349 95 C282 128 238 169 210 218 L349 213 Z" fill="rgba(255,255,255,.18)"/>
+      <path d="M37 317 C180 286 512 287 680 318" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="8" stroke-linecap="round"/>
+    </svg>
+
+    <div class="topbar">
+      <div class="brand">
+        <label class="brand-mark" id="menuOpen" for="menuToggle" role="button" tabindex="0" aria-label="Abrir menu do portal" aria-controls="menuDrawer" aria-expanded="false">≈</label>
+        <span>A alma do rio</span>
+      </div>
+      <button class="icon-button" id="photoOpen" type="button" aria-label="Adicionar foto do barqueiro">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 15.5h18l-2.7 3.8H6.2L3 15.5Z"/>
+          <path d="M12 4.2v11.3M12 5l5.8 7.8H12M12 7.3 7.2 13H12"/>
+          <path d="M5 21c1.2.7 2.4.7 3.6 0 1.2.7 2.4.7 3.6 0 1.2.7 2.4.7 3.6 0 1.2.7 2.4.7 3.6 0"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="hero-content">
+      <div class="eyebrow">🌾 Uma história às margens do rio</div>
+      <h1>Velho <span>Chico</span></h1>
+      <p class="hero-intro">
+        Uma travessia por amores antigos, disputas de terra, silêncios de família
+        e pelo rio que observa tudo sem esquecer de nada.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#resumos">Continuar a travessia ↓</a>
+      </div>
+    </div>
+  </header>
+
+  <label class="swipe-cue" for="menuToggle" aria-label="Abrir menu lateral"></label>
+  <label class="menu-overlay" id="menuOverlay" for="menuToggle" aria-label="Fechar menu" aria-hidden="true"></label>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Menu do portal" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="drawer-brand"><span class="drawer-wave">≈</span><span>Velho Chico</span></div>
+      <label class="drawer-close" id="menuClose" for="menuToggle" role="button" tabindex="0" aria-label="Fechar menu">×</label>
+    </div>
+    <p class="drawer-caption">Escolha uma margem</p>
+    <nav class="drawer-nav" aria-label="Seções do portal">
+      <a href="#inicio">Início</a>
+      <a href="#sinopse">Sinopse</a>
+      <a href="#resumos">Resumos</a>
+      <a href="#trilha">Trilha sonora</a>
+      <a href="#elenco">Elenco</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#bar">Bar do Chico</a>
+    </nav>
+    <p class="drawer-footer">O rio segue. A travessia continua.</p>
+  </aside>
+
+  <main id="conteudo">
+    <section class="section" id="sinopse">
+      <p class="section-kicker">A correnteza da história</p>
+      <h2 class="section-title">Duas famílias.<br>Um amor interrompido.</h2>
+      <p class="section-lead">
+        Em Grotas de São Francisco, os Sá Ribeiro e os Dos Anjos carregam uma disputa
+        antiga por terra e poder. No centro dessa correnteza estão Maria Tereza e Santo,
+        separados pela história, mas unidos por um afeto que insiste em voltar à superfície.
+      </p>
+
+      <div class="synopsis-grid">
+        <article class="quote-card">
+          <blockquote>“O rio muda de margem, mas conserva na água tudo o que viveu.”</blockquote>
+          <cite>Às margens do São Francisco</cite>
+        </article>
+
+        <div class="fact-grid">
+          <article class="fact"><strong>2 fases</strong><span>Da década de 1960 ao tempo presente da trama.</span></article>
+          <article class="fact"><strong>Grotas</strong><span>Uma cidade fictícia banhada pela presença do São Francisco.</span></article>
+          <article class="fact"><strong>Amor</strong><span>Tereza e Santo formam o coração afetivo da narrativa.</span></article>
+          <article class="fact"><strong>Terra</strong><span>Poder, família e pertencimento movem os conflitos centrais.</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="resumos">
+      <p class="section-kicker">Capítulos 140 a 156</p>
+      <h2 class="section-title">A reta final se estreita.</h2>
+      <p class="section-lead">
+        Resumos organizados por arco, com o essencial de cada sequência e sem transformar
+        a leitura numa enxurrada de spoilers.
+      </p>
+
+      <div class="progress-card">
+        <div class="progress-top">
+          <strong>Travessia final</strong>
+          <span>Capítulos 140–156</span>
+        </div>
+        <div class="track" aria-label="Progresso visual da novela"><i></i></div>
+      </div>
+
+      <div class="chapter-list">
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">140</span>
+            <span class="chapter-name"><strong>O despertar de Santo</strong><span>Capítulos 140 e 141</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>Martim tenta acalmar Iolanda enquanto a família atravessa novas tensões.</li>
+              <li>Tereza chega à aldeia e Santo desperta, alterando o rumo emocional de todos.</li>
+              <li>Luzia pede uma chance a Piedade, e Santo finalmente volta para casa.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">142</span>
+            <span class="chapter-name"><strong>A notícia corre por Grotas</strong><span>Capítulos 142 a 145</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>O retorno de Santo se espalha pela cidade e desperta reações intensas.</li>
+              <li>Luzia se enfurece, enquanto Tereza rompe com Carlos e Santo presta depoimento.</li>
+              <li>O reencontro entre Santo e Tereza ganha força, e Afrânio enfrenta Bento.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">146</span>
+            <span class="chapter-name"><strong>O poder muda de mãos</strong><span>Capítulos 146 a 148</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>Bento desafia Afrânio e é incentivado a entrar na disputa política.</li>
+              <li>Miguel enfrenta resistência entre os cooperados.</li>
+              <li>Carlos exige o posto de coronel, mas Afrânio já não deseja carregar esse símbolo.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">149</span>
+            <span class="chapter-name"><strong>A ameaça se aproxima</strong><span>Capítulos 149 e 150</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>Tereza confronta Carlos, e Afrânio também se volta contra ele.</li>
+              <li>Carlos manda prender Bento e intensifica sua ofensiva.</li>
+              <li>Santo flagra Carlos ameaçando Tereza.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">151</span>
+            <span class="chapter-name"><strong>A família sob pressão</strong><span>Capítulos 151 a 154</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>Carlos amplia as ameaças e tenta preservar seu domínio.</li>
+              <li>Martim procura tranquilizar Beatriz, mas a tensão continua crescendo.</li>
+              <li>Afrânio faz um acordo com Carlos, e Martim enfrenta os dois.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="chapter">
+          <summary>
+            <span class="chapter-number">155</span>
+            <span class="chapter-name"><strong>O dossiê vem à tona</strong><span>Capítulos 155 e 156</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="chapter-body">
+            <ul>
+              <li>Zé Pirangueiro encontra Martim na canoa.</li>
+              <li>Martim encontra um dossiê capaz de deslocar as peças do jogo.</li>
+              <li>Carlos chantageia Tereza enquanto os conflitos caminham para o acerto final.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" id="trilha">
+      <p class="section-kicker">Para ouvir com o rio</p>
+      <h2 class="section-title">A trilha que perfuma a paisagem.</h2>
+      <p class="section-lead">
+        Canções para acompanhar a leitura, a memória dos personagens e aquela melancolia
+        dourada que a novela sabe criar tão bem.
+      </p>
+
+      <div class="album-list">
+        <details class="album">
+          <summary>
+            <span class="album-badge">I</span>
+            <span class="album-name"><strong>Volume 01</strong><span>11 faixas mapeadas</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="album-body">
+            <ol class="song-list">
+              <li><span>Tropicália<small>Caetano Veloso</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Tropicalia+Caetano+Veloso" target="_blank" rel="noopener" aria-label="Ouvir Tropicália, de Caetano Veloso">▶</a></li>
+              <li><span>Gemedeira<small>Amelinha</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Gemedeira+Amelinha" target="_blank" rel="noopener" aria-label="Ouvir Gemedeira, de Amelinha">▶</a></li>
+              <li><span>Me Leva<small>Renata Rosa</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Me+Leva+Renata+Rosa" target="_blank" rel="noopener" aria-label="Ouvir Me Leva, de Renata Rosa">▶</a></li>
+              <li><span>Flor de Tangerina<small>Alceu Valença</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Flor+de+Tangerina+Alceu+Valenca" target="_blank" rel="noopener" aria-label="Ouvir Flor de Tangerina, de Alceu Valença">▶</a></li>
+              <li><span>Veja (Margarida)<small>Marcelo Jeneci</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Veja+Margarida+Marcelo+Jeneci" target="_blank" rel="noopener" aria-label="Ouvir Veja (Margarida), de Marcelo Jeneci">▶</a></li>
+              <li><span>Como 2 e 2<small>Gal Costa</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Como+2+e+2+Gal+Costa" target="_blank" rel="noopener" aria-label="Ouvir Como 2 e 2, de Gal Costa">▶</a></li>
+              <li><span>Incelença para o Amor Retirante<small>Xangai</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Incelenca+para+o+Amor+Retirante+Xangai" target="_blank" rel="noopener" aria-label="Ouvir Incelença para o Amor Retirante, de Xangai">▶</a></li>
+              <li><span>Serenata<small>Chico César</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Serenata+Chico+Cesar" target="_blank" rel="noopener" aria-label="Ouvir Serenata, de Chico César">▶</a></li>
+              <li><span>Barcarola do São Francisco<small>Geraldo Azevedo</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Barcarola+do+Sao+Francisco+Geraldo+Azevedo" target="_blank" rel="noopener" aria-label="Ouvir Barcarola do São Francisco, de Geraldo Azevedo">▶</a></li>
+              <li><span>Triste Bahia<small>Caetano Veloso</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Triste+Bahia+Caetano+Veloso" target="_blank" rel="noopener" aria-label="Ouvir Triste Bahia, de Caetano Veloso">▶</a></li>
+              <li><span>Senhor Cidadão<small>Tom Zé</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Senhor+Cidadao+Tom+Ze" target="_blank" rel="noopener" aria-label="Ouvir Senhor Cidadão, de Tom Zé">▶</a></li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="album">
+          <summary>
+            <span class="album-badge">II</span>
+            <span class="album-name"><strong>Volume 02</strong><span>12 faixas mapeadas</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="album-body">
+            <ol class="song-list">
+              <li><span>Mortal Loucura<small>Maria Bethânia</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Mortal+Loucura+Maria+Bethania" target="_blank" rel="noopener" aria-label="Ouvir Mortal Loucura, de Maria Bethânia">▶</a></li>
+              <li><span>Da Aurora Até o Luar<small>Dadi</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Da+Aurora+Ate+o+Luar+Dadi" target="_blank" rel="noopener" aria-label="Ouvir Da Aurora Até o Luar, de Dadi">▶</a></li>
+              <li><span>Não Há Cabeça<small>Pélico</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Nao+Ha+Cabeca+Pelico" target="_blank" rel="noopener" aria-label="Ouvir Não Há Cabeça, de Pélico">▶</a></li>
+              <li><span>Olhos Nus<small>Ná Ozzetti</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Olhos+Nus+Na+Ozzetti" target="_blank" rel="noopener" aria-label="Ouvir Olhos Nus, de Ná Ozzetti">▶</a></li>
+              <li><span>O Ciúme<small>Caetano Veloso</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=O+Ciume+Caetano+Veloso" target="_blank" rel="noopener" aria-label="Ouvir O Ciúme, de Caetano Veloso">▶</a></li>
+              <li><span>Encarnação<small>Elba Ramalho</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Encarnacao+Elba+Ramalho" target="_blank" rel="noopener" aria-label="Ouvir Encarnação, de Elba Ramalho">▶</a></li>
+              <li><span>Perfume do Invisível<small>Céu</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Perfume+do+Invisivel+Ceu" target="_blank" rel="noopener" aria-label="Ouvir Perfume do Invisível, de Céu">▶</a></li>
+              <li><span>Moça Bonita<small>Alceu Valença</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Moca+Bonita+Alceu+Valenca" target="_blank" rel="noopener" aria-label="Ouvir Moça Bonita, de Alceu Valença">▶</a></li>
+              <li><span>La Belle de Jour<small>Alceu Valença</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=La+Belle+de+Jour+Alceu+Valenca" target="_blank" rel="noopener" aria-label="Ouvir La Belle de Jour, de Alceu Valença">▶</a></li>
+              <li><span>Metamorfose Ambulante<small>Raul Seixas</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Metamorfose+Ambulante+Raul+Seixas" target="_blank" rel="noopener" aria-label="Ouvir Metamorfose Ambulante, de Raul Seixas">▶</a></li>
+              <li><span>Monte Castelo<small>Legião Urbana</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Monte+Castelo+Legiao+Urbana" target="_blank" rel="noopener" aria-label="Ouvir Monte Castelo, de Legião Urbana">▶</a></li>
+              <li><span>Meu Primeiro Amor<small>Maria Bethânia</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Meu+Primeiro+Amor+Maria+Bethania" target="_blank" rel="noopener" aria-label="Ouvir Meu Primeiro Amor, de Maria Bethânia">▶</a></li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="album">
+          <summary>
+            <span class="album-badge">≈</span>
+            <span class="album-name"><strong>Outras canções da novela</strong><span>15 músicas para ampliar a travessia</span></span>
+            <span class="chevron">+</span>
+          </summary>
+          <div class="album-body">
+            <ol class="song-list">
+              <li><span>A Cigana<small>Roberto Carlos</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=A+Cigana+Roberto+Carlos" target="_blank" rel="noopener" aria-label="Ouvir A Cigana, de Roberto Carlos">▶</a></li>
+              <li><span>Acabou Chorare<small>Novos Baianos</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Acabou+Chorare+Novos+Baianos" target="_blank" rel="noopener" aria-label="Ouvir Acabou Chorare, de Novos Baianos">▶</a></li>
+              <li><span>Corda de Aço<small>Fagner</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Corda+de+Aco+Fagner" target="_blank" rel="noopener" aria-label="Ouvir Corda de Aço, de Fagner">▶</a></li>
+              <li><span>De Cara a La Pared<small>Lhasa de Sela</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=De+Cara+a+La+Pared+Lhasa+de+Sela" target="_blank" rel="noopener" aria-label="Ouvir De Cara a La Pared, de Lhasa de Sela">▶</a></li>
+              <li><span>Francisco Francisco<small>Maria Bethânia</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Francisco+Francisco+Maria+Bethania" target="_blank" rel="noopener" aria-label="Ouvir Francisco Francisco, de Maria Bethânia">▶</a></li>
+              <li><span>Jardim dos Animais<small>Fagner</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Jardim+dos+Animais+Fagner" target="_blank" rel="noopener" aria-label="Ouvir Jardim dos Animais, de Fagner">▶</a></li>
+              <li><span>Le Vent Nous Portera<small>Sophie Hunger</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Le+Vent+Nous+Portera+Sophie+Hunger" target="_blank" rel="noopener" aria-label="Ouvir Le Vent Nous Portera, de Sophie Hunger">▶</a></li>
+              <li><span>Riacho do Navio<small>Luiz Gonzaga</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Riacho+do+Navio+Luiz+Gonzaga" target="_blank" rel="noopener" aria-label="Ouvir Riacho do Navio, de Luiz Gonzaga">▶</a></li>
+              <li><span>Pedras de Sal<small>Ylana Queiroga</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Pedras+de+Sal+Ylana+Queiroga" target="_blank" rel="noopener" aria-label="Ouvir Pedras de Sal, de Ylana Queiroga">▶</a></li>
+              <li><span>Peixe<small>Doces Bárbaros</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Peixe+Doces+Barbaros" target="_blank" rel="noopener" aria-label="Ouvir Peixe, de Doces Bárbaros">▶</a></li>
+              <li><span>Por Debaixo dos Panos<small>Os Três do Nordeste</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Por+Debaixo+dos+Panos+Os+Tres+do+Nordeste" target="_blank" rel="noopener" aria-label="Ouvir Por Debaixo dos Panos, de Os Três do Nordeste">▶</a></li>
+              <li><span>Quizás, Quizás, Quizás<small>Sara Montiel</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Quizas+Quizas+Quizas+Sara+Montiel" target="_blank" rel="noopener" aria-label="Ouvir Quizás, Quizás, Quizás, de Sara Montiel">▶</a></li>
+              <li><span>Sabiá<small>Luiz Gonzaga</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Sabia+Luiz+Gonzaga" target="_blank" rel="noopener" aria-label="Ouvir Sabiá, de Luiz Gonzaga">▶</a></li>
+              <li><span>Talismã<small>Alceu Valença e Geraldo Azevedo</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Talisma+Alceu+Valenca+Geraldo+Azevedo" target="_blank" rel="noopener" aria-label="Ouvir Talismã, de Alceu Valença e Geraldo Azevedo">▶</a></li>
+              <li><span>Se Você Voltar<small>Bruna Viola, César Menotti &amp; Fabiano</small></span><a class="song-play" href="https://www.youtube.com/results?search_query=Se+Voce+Voltar+Bruna+Viola+Cesar+Menotti+Fabiano" target="_blank" rel="noopener" aria-label="Ouvir Se Você Voltar, de Bruna Viola, César Menotti e Fabiano">▶</a></li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" id="elenco">
+      <p class="section-kicker">Quem habita Grotas</p>
+      <h2 class="section-title">Personagens que carregam margens inteiras.</h2>
+      <p class="section-lead">
+        Um mapa rápido dos nomes centrais para consultar enquanto você acompanha os capítulos.
+      </p>
+
+      <div class="cast-grid">
+        <article class="person"><img class="person-photo" src="./assets/personagens/santo.jpg" alt="Santo, interpretado por Domingos Montagner" loading="lazy" decoding="async"><div class="person-copy"><strong>Santo</strong><span>Domingos Montagner · Coragem, terra e amor persistente</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/tereza.jpg" alt="Tereza, interpretada por Camila Pitanga" loading="lazy" decoding="async"><div class="person-copy"><strong>Tereza</strong><span>Camila Pitanga · Afeto, firmeza e liberdade</span></div></article>
+        <article class="person"><img class="person-photo focus-right" src="./assets/personagens/afranio.jpg" alt="Afrânio, interpretado por Antonio Fagundes" loading="lazy" decoding="async"><div class="person-copy"><strong>Afrânio</strong><span>Antonio Fagundes · Poder, tradição e transformação</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/iolanda.jpg" alt="Iolanda, interpretada por Christiane Torloni" loading="lazy" decoding="async"><div class="person-copy"><strong>Iolanda</strong><span>Christiane Torloni · Presença, arte e lucidez</span></div></article>
+        <article class="person"><img class="person-photo focus-left" src="./assets/personagens/encarnacao.jpg" alt="Encarnação, interpretada por Selma Egrei" loading="lazy" decoding="async"><div class="person-copy"><strong>Encarnação</strong><span>Selma Egrei · Memória, rigidez e ancestralidade</span></div></article>
+        <article class="person"><img class="person-photo focus-left" src="./assets/personagens/carlos-eduardo.jpg" alt="Carlos Eduardo, interpretado por Marcelo Serrado" loading="lazy" decoding="async"><div class="person-copy"><strong>Carlos Eduardo</strong><span>Marcelo Serrado · Ambição, controle e ameaça</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/luzia.jpg" alt="Luzia, interpretada por Lucy Alves" loading="lazy" decoding="async"><div class="person-copy"><strong>Luzia</strong><span>Lucy Alves · Dor, desejo e conflito</span></div></article>
+        <article class="person"><img class="person-photo focus-left" src="./assets/personagens/miguel.jpg" alt="Miguel, interpretado por Gabriel Leone" loading="lazy" decoding="async"><div class="person-copy"><strong>Miguel</strong><span>Gabriel Leone · Futuro, consciência e renovação</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/olivia.jpg" alt="Olívia, interpretada por Giullia Buscacio" loading="lazy" decoding="async"><div class="person-copy"><strong>Olívia</strong><span>Giullia Buscacio · Juventude, sensibilidade e escolha</span></div></article>
+        <article class="person"><img class="person-photo focus-right" src="./assets/personagens/sophie.jpg" alt="Sophie, interpretada por Yara Charry" loading="lazy" decoding="async"><div class="person-copy"><strong>Sophie</strong><span>Yara Charry · Novos olhares e deslocamento</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/lucas.jpg" alt="Lucas, interpretado por Lucas Veloso" loading="lazy" decoding="async"><div class="person-copy"><strong>Lucas</strong><span>Lucas Veloso · Afeto e novas possibilidades</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/martim.jpg" alt="Martim, interpretado por Lee Taylor" loading="lazy" decoding="async"><div class="person-copy"><strong>Martim</strong><span>Lee Taylor · Verdade, busca e confronto</span></div></article>
+        <article class="person"><img class="person-photo" src="./assets/personagens/bento.jpg" alt="Bento, interpretado por Irandhir Santos" loading="lazy" decoding="async"><div class="person-copy"><strong>Bento</strong><span>Irandhir Santos · Justiça, política e resistência</span></div></article>
+      </div>
+    </section>
+
+    <section class="feature-section" id="quiz">
+      <div class="feature-inner">
+        <p class="section-kicker">Espelho das águas</p>
+        <h2 class="section-title">Quem é você em Velho Chico?</h2>
+        <p class="section-lead">
+          Dez escolhas, onze temperamentos possíveis. O resultado não é sentença, é retrato na água.
+        </p>
+
+        <div class="quiz-card" id="quizCard">
+          <div id="questions">
+            <div class="question active" data-step="0">
+              <div class="quiz-meta"><span>Pergunta 1 de 10</span><span>Escolha por instinto</span></div>
+              <h3>Quando a vida aperta, qual força aparece primeiro em você?</h3>
+              <div class="answers">
+                <button class="answer" data-points="santo,tereza,bento">Eu enfrento, mesmo tremendo por dentro.</button>
+                <button class="answer" data-points="iolanda,olivia,martim">Eu observo antes de mover uma peça.</button>
+                <button class="answer" data-points="afranio,encarnacao,carlos">Eu tento recuperar o controle da situação.</button>
+                <button class="answer" data-points="luzia,miguel,tereza">Eu sigo o que sinto, ainda que seja intenso.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="1">
+              <div class="quiz-meta"><span>Pergunta 2 de 10</span><span>Sem pensar demais</span></div>
+              <h3>O que mais pesa numa decisão importante?</h3>
+              <div class="answers">
+                <button class="answer" data-points="santo,bento,miguel">O que é justo para todos.</button>
+                <button class="answer" data-points="tereza,iolanda,olivia">O que preserva minha verdade.</button>
+                <button class="answer" data-points="afranio,encarnacao,carlos">O legado e as consequências.</button>
+                <button class="answer" data-points="luzia,martim,tereza">O que meu coração não consegue calar.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="2">
+              <div class="quiz-meta"><span>Pergunta 3 de 10</span><span>A correnteza continua</span></div>
+              <h3>Qual lugar seria seu refúgio em Grotas?</h3>
+              <div class="answers">
+                <button class="answer" data-points="santo,miguel,bento">A beira do rio, com os pés na terra.</button>
+                <button class="answer" data-points="iolanda,olivia,martim">Um canto silencioso para pensar e criar.</button>
+                <button class="answer" data-points="afranio,encarnacao,carlos">A casa da família, onde tudo começou.</button>
+                <button class="answer" data-points="tereza,luzia,olivia">A estrada, porque ficar também pode prender.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="3">
+              <div class="quiz-meta"><span>Pergunta 4 de 10</span><span>Olhe mais fundo</span></div>
+              <h3>Qual ferida demora mais para fechar?</h3>
+              <div class="answers">
+                <button class="answer" data-points="santo,tereza,luzia">Um amor que não pôde ser vivido.</button>
+                <button class="answer" data-points="afranio,encarnacao,carlos">Perder o lugar que eu julgava meu.</button>
+                <button class="answer" data-points="martim,miguel,bento">Ver uma injustiça e não poder corrigi-la.</button>
+                <button class="answer" data-points="iolanda,olivia,tereza">Não ser realmente compreendido.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="4">
+              <div class="quiz-meta"><span>Pergunta 5 de 10</span><span>Metade da travessia</span></div>
+              <h3>No fim, o que você gostaria de deixar para trás?</h3>
+              <div class="answers">
+                <button class="answer" data-points="santo,bento,miguel">Algo mais justo do que encontrei.</button>
+                <button class="answer" data-points="tereza,iolanda,olivia">A coragem de viver com verdade.</button>
+                <button class="answer" data-points="afranio,encarnacao,martim">Uma história que não seja esquecida.</button>
+                <button class="answer" data-points="luzia,carlos,tereza">A prova de que senti tudo por inteiro.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="5">
+              <div class="quiz-meta"><span>Pergunta 6 de 10</span><span>O coração também responde</span></div>
+              <h3>Quando alguém que você ama comete um erro, como você costuma agir?</h3>
+              <div class="answers">
+                <button class="answer" data-points="tereza,santo,iolanda">Permaneço por perto, mas digo a verdade.</button>
+                <button class="answer" data-points="olivia,miguel,martim">Escuto bastante antes de formar um julgamento.</button>
+                <button class="answer" data-points="encarnacao,afranio,carlos">Tento preservar a história que construímos.</button>
+                <button class="answer" data-points="luzia,bento,carlos">Reajo com intensidade e só depois consigo refletir.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="6">
+              <div class="quiz-meta"><span>Pergunta 7 de 10</span><span>Verdade ou calmaria?</span></div>
+              <h3>Se uma verdade difícil ameaça a paz de todos, o que você faz?</h3>
+              <div class="answers">
+                <button class="answer" data-points="martim,bento,olivia">Revelo tudo. Uma paz sustentada por silêncio não me serve.</button>
+                <button class="answer" data-points="encarnacao,santo,afranio">Espero o momento certo para proteger quem está envolvido.</button>
+                <button class="answer" data-points="iolanda,tereza,miguel">Abro uma conversa delicada para que ninguém seja atropelado.</button>
+                <button class="answer" data-points="carlos,luzia,bento">Defendo minha posição antes que decidam por mim.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="7">
+              <div class="quiz-meta"><span>Pergunta 8 de 10</span><span>O amanhã de Grotas</span></div>
+              <h3>Que futuro você desejaria construir às margens do Velho Chico?</h3>
+              <div class="answers">
+                <button class="answer" data-points="miguel,bento,santo">Um lugar mais justo, sustentável e feito para todos.</button>
+                <button class="answer" data-points="olivia,iolanda,tereza">Um lugar onde arte, afeto e liberdade possam florescer.</button>
+                <button class="answer" data-points="carlos,afranio,encarnacao">Um lugar próspero que respeite a força das antigas raízes.</button>
+                <button class="answer" data-points="martim,luzia,miguel">Um lugar aberto para novas histórias e novos caminhos.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="8">
+              <div class="quiz-meta"><span>Pergunta 9 de 10</span><span>A margem mais íntima</span></div>
+              <h3>Qual destes medos conversa mais com você?</h3>
+              <div class="answers">
+                <button class="answer" data-points="bento,santo,tereza">Trair aquilo em que acredito para evitar um conflito.</button>
+                <button class="answer" data-points="olivia,martim,miguel">Perder a liberdade de descobrir meu próprio caminho.</button>
+                <button class="answer" data-points="encarnacao,iolanda,afranio">Ver desaparecer tudo o que ajudou a formar quem eu sou.</button>
+                <button class="answer" data-points="carlos,luzia,afranio">Ser deixado para trás e perder o controle da minha história.</button>
+              </div>
+            </div>
+
+            <div class="question" data-step="9">
+              <div class="quiz-meta"><span>Pergunta 10 de 10</span><span>Última margem</span></div>
+              <h3>Qual frase melhor resume sua maneira de atravessar a vida?</h3>
+              <div class="answers">
+                <button class="answer" data-points="bento,santo,miguel">Eu cuido dos meus e permaneço firme no que acredito.</button>
+                <button class="answer" data-points="martim,olivia,iolanda">Eu observo profundamente e procuro o que existe além das aparências.</button>
+                <button class="answer" data-points="carlos,miguel,afranio">Eu assumo a direção e transformo o que já não funciona.</button>
+                <button class="answer" data-points="luzia,encarnacao,tereza">Eu sinto intensamente e nunca esqueço de onde vim.</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="quiz-result" id="quizResult">
+            <img class="result-photo" id="resultPhoto" alt="Personagem revelado pelo quiz">
+            <h3 id="resultName">Santo</h3>
+            <p id="resultText"></p>
+            <button class="button button-primary" id="restartQuiz">Refazer o quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="bar">
+      <p class="section-kicker">Espaço de prosa</p>
+      <h2 class="section-title">Bar do Chico.</h2>
+      <p class="section-lead">
+        Chegue mais e puxe uma cadeira. Conte o que o capítulo deixou em você e deixe a
+        prosa seguir no ritmo das águas. A conversa fica guardada somente neste aparelho.
+      </p>
+
+      <div class="bar-card">
+        <div class="chat-shell">
+          <div class="chat-head">
+            <img class="chat-avatar" src="./assets/personagens/chico-criatura.jpg" alt="Chico Criatura">
+            <div class="chat-identity"><strong>Chico Criatura</strong><span>proseando à beira do rio</span></div>
+          </div>
+          <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Conversa no Bar do Chico"></div>
+          <div class="chat-suggestions" aria-label="Sugestões para começar">
+            <button class="chat-prompt" type="button" data-prompt="Uma cena ficou em mim hoje.">Uma cena ficou em mim</button>
+            <button class="chat-prompt" type="button" data-prompt="Quero falar sobre um personagem.">Falar de um personagem</button>
+            <button class="chat-prompt" type="button" data-prompt="O rio me fez pensar sobre a minha própria vida.">O que o rio despertou</button>
+          </div>
+          <div class="chat-compose">
+            <textarea id="chatInput" rows="1" aria-label="Mensagem para o Bar do Chico" placeholder="Escreva sua prosa..."></textarea>
+            <button class="chat-send" id="sendChat" type="button" aria-label="Enviar mensagem">➤</button>
+          </div>
+        </div>
+        <div class="chat-actions">
+          <button class="chat-action" id="exportChat" type="button">Exportar conversa</button>
+          <button class="chat-action" id="clearChat" type="button">Limpar conversa</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="river-footer">
+    <div class="footer-copy">
+      <span class="footer-kicker">O rio nunca termina</span>
+      <strong>A alma do rio continua.</strong>
+      <span class="footer-subtitle">Uma travessia por Velho Chico e pelas águas do São Francisco</span>
+    </div>
+
+    <svg class="river-landscape" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <circle class="footer-sun" cx="760" cy="164" r="54" fill="#efc783" />
+      <path class="footer-hill-back" d="M0 268 C134 216 246 230 351 264 C471 303 561 232 686 244 C808 255 866 298 983 258 C1070 228 1132 231 1200 250 L1200 382 L0 382 Z" />
+      <path class="footer-hill-front" d="M0 315 C126 270 246 304 343 323 C463 346 557 282 687 293 C820 304 898 350 1014 307 C1085 281 1144 287 1200 304 L1200 400 L0 400 Z" />
+      <path class="footer-bank" d="M0 342 C211 322 344 363 505 354 C704 343 871 307 1200 342 L1200 407 C943 386 745 410 554 420 C348 431 171 396 0 414 Z" />
+      <path class="footer-water" d="M0 382 C206 359 368 408 555 389 C762 368 935 352 1200 381 L1200 560 L0 560 Z" />
+      <path class="footer-sun-path" d="M690 398 C732 388 779 388 826 398" />
+
+      <g>
+        <path class="river-current" d="M-80 430 C122 397 250 455 456 425 S818 402 1033 432 S1265 437 1350 418" />
+        <path class="river-current" d="M-110 477 C95 448 258 499 443 472 S793 450 1001 481 S1230 484 1320 462" />
+        <path class="river-current" d="M-90 528 C110 500 272 546 474 520 S812 501 1029 526 S1250 534 1320 512" />
+      </g>
+
+      <g transform="translate(492 365)">
+        <g class="footer-boat-motion">
+          <path d="M0 45 C54 58 139 58 196 42 C178 73 143 86 91 85 C48 84 17 70 0 45Z" fill="#d59646" />
+          <path d="M91 42 L95 -61" fill="none" stroke="#f6ead5" stroke-width="5" stroke-linecap="round" />
+          <path d="M99 -54 C144 -28 166 2 178 39 L101 39 Z" fill="#efc783" opacity=".92" />
+          <path d="M89 -40 C55 -20 31 7 17 42 L89 39 Z" fill="#f8edda" opacity=".76" />
+        </g>
+      </g>
+
+      <g class="footer-reeds">
+        <path d="M31 479 Q38 419 29 374 M54 483 Q51 426 69 386 M77 484 Q84 438 105 405" />
+        <path d="M370 492 Q376 450 365 414 M391 494 Q388 448 405 420" />
+        <path d="M805 494 Q811 450 798 416 M827 493 Q824 447 840 407" />
+        <path d="M1127 488 Q1131 429 1116 391 M1150 490 Q1146 430 1164 378 M1177 491 Q1181 442 1197 410" />
+      </g>
+    </svg>
+  </footer>
+
+  <div class="photo-panel" id="photoPanel" role="dialog" aria-modal="true" aria-labelledby="photoTitle">
+    <div class="sheet">
+      <h2 id="photoTitle">Foto do cabeçalho</h2>
+      <p>Escolha a imagem do barqueiro. Ela será comprimida e guardada somente neste navegador.</p>
+      <div class="sheet-actions">
+        <label class="button button-dark" for="photoInput">Escolher uma foto</label>
+        <input id="photoInput" type="file" accept="image/*" />
+        <button class="button button-soft" id="removePhoto">Remover foto atual</button>
+        <button class="button button-soft" id="photoClose">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const toast = $("#toast");
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("visible");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => toast.classList.remove("visible"), 2600);
+      }
+
+      // Menu lateral
+      const menuToggle = $("#menuToggle");
+      const menuOpen = $("#menuOpen");
+      const menuClose = $("#menuClose");
+      const menuDrawer = $("#menuDrawer");
+      const menuOverlay = $("#menuOverlay");
+
+      function syncMenuState() {
+        const isOpen = menuToggle.checked;
+        document.body.classList.toggle("menu-open", isOpen);
+        menuDrawer.setAttribute("aria-hidden", String(!isOpen));
+        menuOverlay.setAttribute("aria-hidden", String(!isOpen));
+        menuOpen.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      function closeMenu(returnFocus = false) {
+        menuToggle.checked = false;
+        syncMenuState();
+        if (returnFocus) menuOpen.focus();
+      }
+
+      menuToggle.addEventListener("change", syncMenuState);
+      [menuOpen, menuClose].forEach(control => control.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          menuToggle.checked = !menuToggle.checked;
+          syncMenuState();
+        }
+      }));
+      $$(".drawer-nav a").forEach(link => link.addEventListener("click", () => closeMenu()));
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && menuToggle.checked) closeMenu(true);
+      });
+
+      // Gestos de navegação: deslize para a esquerda para abrir
+      let swipeStart = null;
+      document.addEventListener("touchstart", event => {
+        if (event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        swipeStart = {
+          x: touch.clientX,
+          y: touch.clientY,
+          menuWasOpen: menuToggle.checked
+        };
+      }, { passive: true });
+
+      document.addEventListener("touchend", event => {
+        if (!swipeStart || event.changedTouches.length !== 1) return;
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - swipeStart.x;
+        const deltaY = touch.clientY - swipeStart.y;
+        const horizontal = Math.abs(deltaX) > 68 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25;
+
+        if (horizontal) {
+          if (!swipeStart.menuWasOpen && (deltaX < 0 || (swipeStart.x < 38 && deltaX > 0))) {
+            menuToggle.checked = true;
+            syncMenuState();
+          } else if (swipeStart.menuWasOpen && deltaX < 0) {
+            closeMenu();
+          }
+        }
+        swipeStart = null;
+      }, { passive: true });
+
+      // Foto do cabeçalho
+      const photoPanel = $("#photoPanel");
+      const heroPhoto = $("#heroPhoto");
+      const hero = $(".hero");
+      const photoInput = $("#photoInput");
+
+      function openPhotoPanel() { photoPanel.classList.add("visible"); }
+      function closePhotoPanel() { photoPanel.classList.remove("visible"); }
+      $("#photoOpen").addEventListener("click", openPhotoPanel);
+      $("#photoClose").addEventListener("click", closePhotoPanel);
+      photoPanel.addEventListener("click", (e) => {
+        if (e.target === photoPanel) closePhotoPanel();
+      });
+
+      function applyHeroPhoto(dataUrl) {
+        if (!dataUrl) {
+          heroPhoto.removeAttribute("src");
+          heroPhoto.classList.remove("visible");
+          hero.classList.remove("has-photo");
+          return;
+        }
+        heroPhoto.src = dataUrl;
+        heroPhoto.classList.add("visible");
+        hero.classList.add("has-photo");
+      }
+
+      try { applyHeroPhoto(localStorage.getItem("velhoChicoHero")); } catch (_) {}
+
+      photoInput.addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = new Image();
+          image.onload = () => {
+            const maxWidth = 1600;
+            const scale = Math.min(1, maxWidth / image.width);
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(image.width * scale);
+            canvas.height = Math.round(image.height * scale);
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            const compressed = canvas.toDataURL("image/jpeg", .82);
+            try {
+              localStorage.setItem("velhoChicoHero", compressed);
+              applyHeroPhoto(compressed);
+              if (navigator.storage && navigator.storage.persist) {
+                navigator.storage.persist().catch(() => {});
+              }
+              closePhotoPanel();
+              showToast("Foto do barqueiro colocada no portal 🌊");
+            } catch (_) {
+              showToast("A foto ficou grande demais. Tente uma imagem menor.");
+            }
+          };
+          image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+        event.target.value = "";
+      });
+
+      $("#removePhoto").addEventListener("click", () => {
+        try { localStorage.removeItem("velhoChicoHero"); } catch (_) {}
+        applyHeroPhoto("");
+        closePhotoPanel();
+        showToast("Foto removida. O rio voltou ao visual original.");
+      });
+
+      // Quiz
+      const profiles = {
+        santo: {
+          name: "Santo",
+          photoName: "Santo",
+          text: "Você carrega uma força silenciosa. Protege o que ama, enfrenta o que considera injusto e precisa sentir os pés firmes na própria verdade."
+        },
+        tereza: {
+          name: "Maria Tereza",
+          photoName: "Tereza",
+          text: "Você ama com profundidade, mas não nasceu para viver aprisionado. Sua delicadeza convive com uma coragem enorme de recomeçar."
+        },
+        afranio: {
+          name: "Afrânio",
+          photoName: "Afrânio",
+          text: "Você possui presença, intensidade e um vínculo forte com a própria história. Sua grande travessia é aprender quando sustentar e quando soltar."
+        },
+        iolanda: {
+          name: "Iolanda",
+          photoName: "Iolanda",
+          text: "Você observa o que os outros escondem. Tem sensibilidade artística, inteligência emocional e uma elegância quieta para atravessar conflitos."
+        },
+        encarnacao: {
+          name: "Encarnação",
+          photoName: "Encarnação",
+          text: "A memória tem peso para você. Lealdade, família e raízes são pilares, embora seu crescimento aconteça quando o passado deixa de comandar o presente."
+        },
+        carlos: {
+          name: "Carlos Eduardo",
+          photoName: "Carlos Eduardo",
+          text: "Você pensa estrategicamente e detesta perder espaço. O desafio do seu arquétipo é trocar controle por confiança sem apagar sua ambição."
+        },
+        luzia: {
+          name: "Luzia",
+          photoName: "Luzia",
+          text: "Você sente em volume alto. Ama, sofre e reage com intensidade. Quando transforma dor em consciência, sua força deixa de ferir e começa a libertar."
+        },
+        miguel: {
+          name: "Miguel",
+          photoName: "Miguel",
+          text: "Você olha para o futuro e busca soluções que façam sentido coletivo. Carrega idealismo, curiosidade e vontade de renovar estruturas antigas."
+        },
+        olivia: {
+          name: "Olívia",
+          photoName: "Olívia",
+          text: "Você combina sensibilidade e independência. Precisa descobrir a vida por si mesmo, sem deixar que expectativas alheias escrevam seu caminho."
+        },
+        martim: {
+          name: "Martim",
+          photoName: "Martim",
+          text: "Você é movido pela busca da verdade. Observa sinais, junta peças e prefere uma descoberta difícil a uma paz construída sobre silêncio."
+        },
+        bento: {
+          name: "Bento",
+          photoName: "Bento",
+          text: "Seu impulso é defender quem tem menos voz. Você se acende diante da injustiça e encontra sentido quando participa de algo maior do que si."
+        }
+      };
+
+      let step = 0;
+      let scores = {};
+      const questions = $$(".question");
+      const result = $("#quizResult");
+
+      function resetQuiz() {
+        step = 0;
+        scores = {};
+        result.classList.remove("visible");
+        $("#resultPhoto").removeAttribute("src");
+        $("#questions").style.display = "";
+        questions.forEach((q, index) => q.classList.toggle("active", index === 0));
+      }
+
+      $$(".answer").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.dataset.points.split(",").forEach((name, index) => {
+            scores[name] = (scores[name] || 0) + (3 - index * .55);
+          });
+
+          questions[step].classList.remove("active");
+          step += 1;
+
+          if (step < questions.length) {
+            questions[step].classList.add("active");
+          } else {
+            const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+            const profile = profiles[winner] || profiles.santo;
+            $("#questions").style.display = "none";
+            const portrait = document.querySelector(`.person-photo[alt^="${profile.photoName},"]`);
+            const resultPhoto = $("#resultPhoto");
+            resultPhoto.src = portrait ? portrait.src : "";
+            resultPhoto.alt = `${profile.name}, seu resultado no quiz`;
+            $("#resultName").textContent = profile.name;
+            $("#resultText").textContent = profile.text;
+            result.classList.add("visible");
+            result.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      });
+      $("#restartQuiz").addEventListener("click", resetQuiz);
+
+      // Bar do Chico
+      const chatMessages = $("#chatMessages");
+      const chatInput = $("#chatInput");
+      const openingMessage = {
+        id: "abertura",
+        role: "chico",
+        text: "Chegue mais, puxe uma cadeira. O que as águas de hoje deixaram em você?",
+        createdAt: new Date().toISOString()
+      };
+      let chat = [];
+
+      try { chat = JSON.parse(localStorage.getItem("barDoChicoChat") || "[]"); }
+      catch (_) { chat = []; }
+      if (!Array.isArray(chat) || !chat.length) chat = [openingMessage];
+
+      function saveChat() {
+        try { localStorage.setItem("barDoChicoChat", JSON.stringify(chat)); }
+        catch (_) { showToast("Não foi possível guardar a conversa neste navegador."); }
+      }
+
+      function chatTime(iso) {
+        return new Intl.DateTimeFormat("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }).format(new Date(iso));
+      }
+
+      function renderChat() {
+        chatMessages.innerHTML = "";
+        chat.forEach(message => {
+          const row = document.createElement("div");
+          row.className = `chat-message ${message.role}`;
+
+          const bubble = document.createElement("div");
+          bubble.className = "chat-bubble";
+
+          const name = document.createElement("strong");
+          name.textContent = message.role === "chico" ? "Chico Criatura" : "Você";
+
+          const text = document.createElement("p");
+          text.textContent = message.text;
+
+          const time = document.createElement("time");
+          time.dateTime = message.createdAt;
+          time.textContent = chatTime(message.createdAt);
+
+          bubble.append(name, text, time);
+          row.append(bubble);
+          chatMessages.append(row);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function normalizeChatText(text) {
+        return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      }
+
+      function chatHas(text, term) {
+        const cleanText = ` ${text.replace(/[^a-z0-9]+/g, " ").trim()} `;
+        const cleanTerm = term.replace(/[^a-z0-9]+/g, " ").trim();
+        return cleanTerm.includes(" ") ? text.includes(cleanTerm) : cleanText.includes(` ${cleanTerm} `);
+      }
+
+      function chatHasAny(text, terms) {
+        return terms.some(term => chatHas(text, term));
+      }
+
+      function replyHash(value) {
+        return [...value].reduce((hash, character) => ((hash * 31) + character.charCodeAt(0)) >>> 0, 7);
+      }
+
+      function chooseReply(options, seed) {
+        return options[replyHash(`${seed}-${chat.length}`) % options.length];
+      }
+
+      const characterVoices = {
+        santo: {
+          name: "Santo",
+          words: ["santo", "dos anjos"],
+          insights: [
+            "Santo transforma afeto em responsabilidade, mas às vezes acredita que proteger os outros lhe dá o direito de decidir sozinho.",
+            "Em Santo, firmeza e vulnerabilidade caminham juntas. Ele parece mais seguro justamente quando está tentando esconder o quanto algo o atingiu.",
+            "Santo tem um senso profundo de justiça, embora o coração dele nem sempre consiga obedecer à vida prática que construiu."
+          ]
+        },
+        tereza: {
+          name: "Tereza",
+          words: ["tereza", "maria tereza"],
+          insights: [
+            "Tereza vive entre o que sente e o que precisou aprender para sobreviver. A delicadeza dela não é fraqueza; é uma forma muito consciente de resistência.",
+            "Tereza carrega o amor sem aceitar que ele apague sua liberdade. Por isso cada escolha dela parece ter saudade e coragem ao mesmo tempo.",
+            "Em Tereza, o passado não desaparece: ele conversa o tempo todo com a mulher que ela decidiu se tornar."
+          ]
+        },
+        afranio: {
+          name: "Afrânio",
+          words: ["afranio", "sarue", "coronel sarue"],
+          insights: [
+            "Afrânio confunde autoridade com proteção porque foi educado para acreditar que perder o controle é perder a própria identidade.",
+            "Por trás da dureza de Afrânio existe um homem preso ao papel que herdou. A mudança dele só começa quando esse papel já não consegue sustentá-lo.",
+            "Afrânio quer comandar a terra, a família e o destino, mas a novela mostra que nenhuma dessas coisas aceita ser possuída para sempre."
+          ]
+        },
+        iolanda: {
+          name: "Iolanda",
+          words: ["iolanda"],
+          insights: [
+            "Iolanda percebe as correntes escondidas antes dos outros. Ela não precisa levantar a voz para mudar o rumo de uma conversa.",
+            "A elegância de Iolanda vem da lucidez: ela observa as contradições sem perder a capacidade de sentir.",
+            "Iolanda conhece o peso dos silêncios de Grotas e escolhe com cuidado quando acolher, quando esperar e quando dizer a verdade."
+          ]
+        },
+        encarnacao: {
+          name: "Encarnação",
+          words: ["encarnacao", "dona encarnacao"],
+          insights: [
+            "Encarnação fez da memória uma casa, mas também uma fortaleza. Ela protege as raízes mesmo quando elas já começaram a ferir quem está por perto.",
+            "Em Encarnação, amor e rigidez se misturam. Muito do que parece frieza nasceu do medo de ver a família se desfazer.",
+            "Encarnação representa um passado que não quer ser esquecido, embora precise aprender que preservar não é o mesmo que impedir a mudança."
+          ]
+        },
+        carlos: {
+          name: "Carlos Eduardo",
+          words: ["carlos", "carlos eduardo"],
+          insights: [
+            "Carlos Eduardo lê as relações como posições a conquistar. Quando sente que perde espaço, a estratégia dele costuma falar mais alto que o afeto.",
+            "A ambição de Carlos não nasce apenas do desejo de poder; nasce também do medo de ser irrelevante na história dos outros.",
+            "Carlos tenta controlar a narrativa ao redor dele porque não suporta ocupar um lugar que não escolheu."
+          ]
+        },
+        luzia: {
+          name: "Luzia",
+          words: ["luzia"],
+          insights: [
+            "Luzia sente antes de conseguir compreender. Isso explica a intensidade das reações dela, mas não apaga as marcas que elas deixam.",
+            "A ferida de Luzia é real, porém ela muitas vezes transforma medo de abandono em tentativa de aprisionar quem ama.",
+            "Luzia ama com urgência porque teme perder. O problema é que, tentando segurar, ela acaba empurrando para longe."
+          ]
+        },
+        miguel: {
+          name: "Miguel",
+          words: ["miguel"],
+          insights: [
+            "Miguel olha para a terra como futuro, não apenas como herança. Ele tenta conciliar pertencimento com transformação.",
+            "Miguel traz uma esperança prática: não quer negar as raízes, mas também não aceita que tradição seja desculpa para repetir os mesmos erros.",
+            "Em Miguel, curiosidade e responsabilidade coletiva caminham juntas. Ele imagina outras maneiras de permanecer."
+          ]
+        },
+        olivia: {
+          name: "Olívia",
+          words: ["olivia"],
+          insights: [
+            "Olívia precisa experimentar a vida com os próprios olhos. Ela escuta as raízes, mas não permite que decidam todo o caminho por ela.",
+            "A liberdade de Olívia não é falta de vínculo. É a necessidade de amar sem desaparecer dentro das expectativas alheias.",
+            "Olívia carrega sensibilidade e movimento. Quando algo parece fechado demais, ela procura uma passagem."
+          ]
+        },
+        martim: {
+          name: "Martim",
+          words: ["martim"],
+          insights: [
+            "Martim prefere uma verdade dolorosa a uma tranquilidade construída sobre silêncio. A busca dele é também uma busca por pertencimento.",
+            "Martim observa o que foi escondido porque sente que os vazios da família dizem tanto quanto as histórias oficiais.",
+            "Em Martim, descobrir é uma forma de voltar para casa, ainda que cada resposta abra uma pergunta mais difícil."
+          ]
+        },
+        bento: {
+          name: "Bento",
+          words: ["bento"],
+          insights: [
+            "Bento transforma indignação em ação. Ele entende que justiça não pode existir apenas como sentimento bonito.",
+            "A força de Bento vem do coletivo. Ele se reconhece quando está defendendo algo maior do que os próprios interesses.",
+            "Bento pode ser impulsivo, mas a raiz dessa urgência é a recusa em tratar a injustiça como parte normal da paisagem."
+          ]
+        }
+      };
+
+      const topicVoices = {
+        river: {
+          words: ["rio", "agua", "aguas", "margem", "correnteza", "sao francisco"],
+          insights: [
+            "O rio funciona como memória viva: ele muda diante dos olhos, mas conserva sinais de tudo o que atravessou.",
+            "Quando o São Francisco aparece, a paisagem não está apenas ilustrando a cena. Ela está dizendo que tudo se move, mesmo quando as pessoas insistem em permanecer iguais."
+          ]
+        },
+        love: {
+          words: ["amor", "amar", "romance", "casal", "beijo", "saudade", "paixao"],
+          insights: [
+            "Em Velho Chico, amar nunca é apenas ficar junto. É escolher o que fazer com o tempo, a perda e a liberdade do outro.",
+            "Os amores da novela carregam desejo e consequência. O sentimento pode ser verdadeiro e, ainda assim, não justificar todas as escolhas."
+          ]
+        },
+        family: {
+          words: ["familia", "mae", "pai", "avo", "casa", "filho", "filha", "irmao"],
+          insights: [
+            "Nas famílias de Grotas, cuidado e controle vivem perigosamente próximos. Muita coisa é feita em nome do amor sem que o outro seja realmente escutado.",
+            "A família dá raiz aos personagens, mas também entrega papéis antigos que cada geração precisa decidir se continuará representando."
+          ]
+        },
+        land: {
+          words: ["terra", "natureza", "plantar", "agricultura", "sustentavel", "sustentabilidade", "meio ambiente"],
+          insights: [
+            "A terra em Velho Chico é herança, sustento e responsabilidade. A diferença entre possuir e cuidar dela revela muito sobre cada personagem.",
+            "A novela contrapõe duas ideias de futuro: explorar a terra até o limite ou permanecer nela sem destruir aquilo que mantém todos vivos."
+          ]
+        },
+        power: {
+          words: ["poder", "controle", "mandar", "coronel", "fazenda", "ambicao"],
+          insights: [
+            "O poder em Grotas nunca está só na terra ou no dinheiro; está na capacidade de definir a vida dos outros.",
+            "Quem tenta controlar tudo geralmente está revelando o lugar exato onde sente mais medo de perder."
+          ]
+        },
+        justice: {
+          words: ["justica", "injustica", "injusto", "injusta", "povo", "politica", "direito"],
+          insights: [
+            "A novela trata justiça como movimento, não como discurso. Reparar exige mexer nas estruturas que fizeram a ferida parecer normal.",
+            "Há uma diferença importante entre vingança e justiça: uma devolve a dor; a outra tenta impedir que ela continue circulando."
+          ]
+        },
+        truth: {
+          words: ["verdade", "segredo", "misterio", "mentira", "escondeu", "revelacao"],
+          insights: [
+            "Toda verdade em Grotas chega com atraso e cobra juros emocionais. O silêncio protege por um tempo, mas também modifica quem precisa sustentá-lo.",
+            "Descobrir um segredo não encerra o conflito. Muitas vezes é justamente ali que começa a parte mais difícil: decidir o que fazer com a verdade."
+          ]
+        },
+        intuition: {
+          words: ["intuicao", "pressentimento", "espiritual", "energia", "senti", "sentimento"],
+          insights: [
+            "Há cenas em que a percepção chega antes da explicação. A novela usa os silêncios, os olhares e a paisagem para fazer a gente sentir antes de entender.",
+            "Nem tudo o que toca a gente vem de uma fala direta. Às vezes o corpo percebe a mudança da correnteza primeiro."
+          ]
+        },
+        ending: {
+          words: ["fim", "final", "acabando", "despedida", "terminar", "ultimo", "reta final"],
+          insights: [
+            "Quando uma história se aproxima do fim, cada cena começa a carregar também o peso da despedida.",
+            "O final organiza os destinos, mas a verdadeira despedida acontece naquilo que a novela deixa vivendo em quem acompanhou a travessia."
+          ]
+        },
+        music: {
+          words: ["musica", "cancao", "trilha", "tocar", "ouvir"],
+          insights: [
+            "A trilha de Velho Chico não acompanha apenas a imagem; ela perfuma a lembrança e dá continuidade ao que a cena não conseguiu dizer.",
+            "Certas canções viram uma segunda memória da novela. Basta tocar alguns acordes para a paisagem inteira voltar."
+          ]
+        }
+      };
+
+      const emotionWords = {
+        sadness: ["triste", "tristeza", "chorei", "chorar", "doeu", "dor", "saudade", "sofrendo", "pesado"],
+        anger: ["raiva", "odio", "revoltado", "revoltante", "absurdo", "irritado", "injusto", "injusta", "detestei"],
+        joy: ["feliz", "amei", "lindo", "linda", "adorei", "gostei", "perfeito", "emocionante"],
+        confusion: ["nao entendi", "confuso", "confusa", "duvida", "por que", "porque", "como assim"],
+        surprise: ["chocado", "chocada", "surpreso", "surpresa", "nao esperava", "meu deus"]
+      };
+
+      const conversationMemory = { character: "", topic: "", emotion: "" };
+
+      function analyzeChatMessage(message, useMemory = true) {
+        const text = normalizeChatText(message);
+        const character = Object.entries(characterVoices)
+          .find(([, profile]) => chatHasAny(text, profile.words))?.[0] || "";
+
+        const topicScores = Object.entries(topicVoices).map(([key, topic]) => ({
+          key,
+          score: topic.words.reduce((score, word) => score + (chatHas(text, word) ? 1 : 0), 0)
+        })).sort((a, b) => b.score - a.score);
+
+        const emotionScores = Object.entries(emotionWords).map(([key, words]) => ({
+          key,
+          score: words.reduce((score, word) => score + (chatHas(text, word) ? 1 : 0), 0)
+        })).sort((a, b) => b.score - a.score);
+
+        const refersBack = chatHasAny(text, ["ele", "ela", "dele", "dela", "isso", "aquilo", "essa cena", "essa atitude", "esse momento"]);
+        let resolvedCharacter = character;
+        let resolvedTopic = topicScores[0].score ? topicScores[0].key : "";
+        if (useMemory && refersBack && !resolvedCharacter) resolvedCharacter = conversationMemory.character;
+        if (useMemory && (refersBack || text.split(/\s+/).length <= 5) && !resolvedTopic) resolvedTopic = conversationMemory.topic;
+
+        return {
+          text,
+          character: resolvedCharacter,
+          topic: resolvedTopic,
+          emotion: emotionScores[0].score ? emotionScores[0].key : "",
+          usedMemory: Boolean(useMemory && refersBack && !character && resolvedCharacter),
+          isQuestion: /\?|\b(o que|por que|porque|como|quem|qual|voce acha|acha que)\b/.test(text)
+        };
+      }
+
+      function rememberChatContext(analysis) {
+        if (analysis.character) conversationMemory.character = analysis.character;
+        if (analysis.topic) conversationMemory.topic = analysis.topic;
+        if (analysis.emotion) conversationMemory.emotion = analysis.emotion;
+      }
+
+      chat.filter(item => item.role === "user").slice(-12).forEach(item => {
+        rememberChatContext(analyzeChatMessage(item.text, false));
+      });
+
+      function guidedReply(message) {
+        const analysis = analyzeChatMessage(message);
+        const seed = `${message}-${analysis.character}-${analysis.topic}-${analysis.emotion}`;
+
+        if (chatHasAny(analysis.text, ["oi", "ola", "boa noite", "bom dia", "boa tarde", "e ai"])) {
+          return chooseReply([
+            "Chegue mais, meu amigo. A cadeira está puxada e a prosa pode correr sem pressa. O que ficou em você no capítulo de hoje?",
+            "Boa prosa para nós. Diga por onde você quer começar: uma cena, um personagem ou um sentimento que o rio acordou?"
+          ], seed);
+        }
+
+        if (chatHasAny(analysis.text, ["obrigado", "obrigada", "valeu", "agradeco"])) {
+          return chooseReply([
+            "Eu é que agradeço a companhia nessa margem. Quando outra cena ficar ecoando, esta mesa continua aqui.",
+            "A prosa boa é aquela que deixa espaço para a próxima chegada. Guarde o que lhe fez bem e volte quando o rio chamar."
+          ], seed);
+        }
+
+        let insight = "";
+        if (analysis.character) {
+          insight = chooseReply(characterVoices[analysis.character].insights, seed);
+        } else if (analysis.topic) {
+          insight = chooseReply(topicVoices[analysis.topic].insights, seed);
+        }
+
+        if (analysis.character && analysis.topic) {
+          const topicAngle = chooseReply(topicVoices[analysis.topic].insights, `${seed}-topic`);
+          insight = `${insight} ${topicAngle}`;
+        }
+
+        if (!insight) {
+          const emotionalOpeners = {
+            sadness: [
+              "Eu senti o peso do que você trouxe. Algumas cenas doem porque encontram uma lembrança que já estava esperando dentro da gente.",
+              "Essa tristeza parece ter ficado depois que a imagem passou. Talvez a cena tenha tocado numa despedida maior do que ela mesma."
+            ],
+            anger: [
+              "Sua revolta faz sentido dentro do que você percebeu. Quando uma atitude fere aquilo que consideramos justo, a cena continua discutindo com a gente.",
+              "Dá para sentir que isso lhe atravessou como uma injustiça, não apenas como uma escolha ruim de personagem."
+            ],
+            joy: [
+              "Que bonito quando uma cena encontra a gente desse jeito. A alegria também é uma forma de reconhecimento.",
+              "Essa cena parece ter aberto claridade na travessia. Há momentos em que a novela devolve exatamente a emoção que a gente precisava sentir."
+            ],
+            confusion: [
+              "Vamos separar as águas com calma. Talvez a cena esteja mostrando uma coisa na atitude e outra no sentimento escondido por trás dela.",
+              "Sua dúvida é boa porque essa situação não parece ter uma única margem. A intenção e a consequência podem estar apontando para lados diferentes."
+            ],
+            surprise: [
+              "Essa virada muda a leitura do que veio antes. Quando a surpresa é boa, ela reorganiza até os pequenos sinais que pareciam sem importância.",
+              "Eu também leria esse momento como uma quebra de correnteza: de repente, tudo o que parecia estável muda de direção."
+            ]
+          };
+          insight = chooseReply(emotionalOpeners[analysis.emotion] || [
+            "Conte mais, porque há alguma coisa nessa cena que continuou se movendo mesmo depois que o capítulo terminou.",
+            "Às vezes o que mais marca não é o acontecimento, mas o sentimento que ficou sem nome depois dele.",
+            "Estou acompanhando sua leitura. Essa história costuma tocar justamente onde afeto, memória e escolha se encontram."
+          ], seed);
+        }
+
+        const followUps = {
+          sadness: [
+            "O que doeu mais: aquilo que aconteceu ou o que poderia ter acontecido de outro modo?",
+            "Essa sensação veio mais como saudade, perda ou identificação?"
+          ],
+          anger: [
+            "Sua revolta nasceu mais da atitude ou da falta de consciência sobre o dano causado?",
+            "Para você, o que teria sido uma escolha verdadeiramente justa nessa situação?"
+          ],
+          joy: [
+            "Qual detalhe fez esse momento ficar tão bonito para você?",
+            "Foi a cena em si ou tudo o que ela representou depois de tanta espera?"
+          ],
+          confusion: [
+            "Qual parte parece não combinar com o que esse personagem vinha demonstrando?",
+            "Você quer olhar primeiro para a intenção do personagem ou para a consequência da escolha?"
+          ],
+          surprise: [
+            "Olhando para trás, você percebe algum sinal de que isso já estava sendo preparado?",
+            "Essa surpresa mudou sua opinião sobre alguém da história?"
+          ],
+          neutral: [
+            "O que pesa mais na sua leitura: a intenção ou a consequência dessa escolha?",
+            "Você conseguiu compreender o personagem ou a atitude ainda lhe parece difícil de aceitar?",
+            "Que parte dessa situação conversa mais com a sua própria maneira de ver a vida?"
+          ]
+        };
+
+        const contextLead = analysis.usedMemory && analysis.character
+          ? `Voltando a ${characterVoices[analysis.character].name}: `
+          : "";
+        const followUp = chooseReply(followUps[analysis.emotion] || followUps.neutral, `${seed}-question`);
+        rememberChatContext(analysis);
+        return `${contextLead}${insight} ${followUp}`;
+      }
+
+      let replyPending = false;
+      let replyTimer = 0;
+
+      function showChatTyping() {
+        const row = document.createElement("div");
+        row.className = "chat-message chico typing";
+        row.id = "chatTyping";
+        row.setAttribute("aria-label", "Chico está pensando");
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble";
+        for (let index = 0; index < 3; index += 1) {
+          const dot = document.createElement("span");
+          dot.className = "typing-dot";
+          bubble.append(dot);
+        }
+        row.append(bubble);
+        chatMessages.append(row);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function finishPendingReply() {
+        replyPending = false;
+        $("#sendChat").disabled = false;
+        $("#chatTyping")?.remove();
+      }
+
+      function sendChatMessage() {
+        if (replyPending) {
+          showToast("Chico ainda está pensando nessa prosa.");
+          return;
+        }
+        const text = chatInput.value.trim();
+        if (!text) {
+          chatInput.focus();
+          return;
+        }
+
+        chat.push({ id: Date.now(), role: "user", text, createdAt: new Date().toISOString() });
+        chatInput.value = "";
+        saveChat();
+        renderChat();
+
+        const reply = guidedReply(text);
+        replyPending = true;
+        $("#sendChat").disabled = true;
+        showChatTyping();
+        const thinkingTime = Math.min(1500, 620 + text.length * 9);
+        replyTimer = window.setTimeout(() => {
+          finishPendingReply();
+          chat.push({ id: Date.now() + 1, role: "chico", text: reply, createdAt: new Date().toISOString() });
+          saveChat();
+          renderChat();
+        }, thinkingTime);
+      }
+
+      $("#sendChat").addEventListener("click", sendChatMessage);
+      chatInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendChatMessage();
+        }
+      });
+      $$(".chat-prompt").forEach(prompt => prompt.addEventListener("click", () => {
+        chatInput.value = prompt.dataset.prompt;
+        chatInput.focus();
+      }));
+
+      $("#clearChat").addEventListener("click", () => {
+        if (!confirm("Limpar toda a conversa do Bar do Chico?")) return;
+        window.clearTimeout(replyTimer);
+        finishPendingReply();
+        chat = [{ ...openingMessage, createdAt: new Date().toISOString() }];
+        conversationMemory.character = "";
+        conversationMemory.topic = "";
+        conversationMemory.emotion = "";
+        saveChat();
+        renderChat();
+        showToast("A mesa foi limpa para uma nova prosa.");
+      });
+
+      $("#exportChat").addEventListener("click", () => {
+        if (chat.length <= 1) {
+          showToast("A prosa ainda está só começando.");
+          return;
+        }
+        const content = [
+          "BAR DO CHICO",
+          "Uma conversa às margens do São Francisco",
+          "",
+          ...chat.flatMap(message => [
+            `${message.role === "chico" ? "Chico Criatura" : "Você"} · ${chatTime(message.createdAt)}`,
+            message.text,
+            ""
+          ])
+        ].join("\n");
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "Bar-do-Chico-conversa.txt";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1200);
+        showToast("Conversa preparada para salvar.");
+      });
+
+      // PWA: disponível após a publicação em HTTPS.
+      if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").then(registration => {
+            registration.addEventListener("updatefound", () => {
+              const worker = registration.installing;
+              if (!worker) return;
+              worker.addEventListener("statechange", () => {
+                if (worker.state === "installed" && navigator.serviceWorker.controller) {
+                  showToast("Uma nova correnteza chegou. Reabra o portal para atualizar.");
+                }
+              });
+            });
+          }).catch(() => {
+            // O portal continua utilizável mesmo quando o cache offline não está disponível.
+          });
+        });
+      }
+
+      saveChat();
+      renderChat();
+    })();
+  </script>
+</body>
+</html>
