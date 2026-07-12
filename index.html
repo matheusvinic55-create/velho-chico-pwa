@@ -595,7 +595,7 @@
     }
     .track > i {
       display: block;
-      width: 82%;
+      width: 100%;
       height: 100%;
       background: linear-gradient(90deg, var(--terracotta), var(--gold));
       border-radius: inherit;
@@ -604,7 +604,38 @@
     .chapter-list {
       display: grid;
       gap: 12px;
-      margin-top: 30px;
+      margin-top: 16px;
+    }
+    .arc-block { margin-top: 34px; }
+    .arc-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 2px 12px;
+      border-bottom: 0;
+    }
+    .arc-head span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--terracotta);
+      font-size: .68rem;
+      font-weight: 820;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .arc-head h3 {
+      margin: 0;
+      color: var(--river);
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 560;
+      line-height: 1.08;
+    }
+    .arc-range {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: .76rem;
     }
     details.chapter, details.album {
       background: var(--white);
@@ -658,9 +689,20 @@
       padding: 0 20px 22px 80px;
       color: #41504c;
     }
+    .chapter-body p {
+      margin: 0;
+      line-height: 1.65;
+    }
     .chapter-body p:first-child, .album-body p:first-child { margin-top: 0; }
     .chapter-body ul { padding-left: 18px; margin-bottom: 0; }
     .chapter-body li + li { margin-top: 8px; }
+    .summary-source {
+      margin: 30px 2px 0;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.55;
+    }
+    .summary-source a { text-decoration: underline; text-underline-offset: 3px; }
 
     .album-list {
       display: grid;
@@ -1342,111 +1384,116 @@
 
     <section class="section" id="resumos">
       <p class="section-kicker">Capítulos 140 a 156</p>
-      <h2 class="section-title">A reta final se estreita.</h2>
+      <h2 class="section-title">Cada capítulo deixa sua margem.</h2>
       <p class="section-lead">
-        Resumos organizados por arco, com o essencial de cada sequência e sem transformar
-        a leitura numa enxurrada de spoilers.
+        Um arquivo completo da reta final, organizado em arcos semanais de seis capítulos
+        para você voltar depois de cada noite e acompanhar a correnteza da história.
       </p>
 
       <div class="progress-card">
         <div class="progress-top">
-          <strong>Travessia final</strong>
-          <span>Capítulos 140–156</span>
+          <strong>Arquivo da travessia</strong>
+          <span>17 resumos completos</span>
         </div>
-        <div class="track" aria-label="Progresso visual da novela"><i></i></div>
+        <div class="track" aria-label="Arquivo dos capítulos 140 a 156 completo"><i></i></div>
       </div>
 
-      <div class="chapter-list">
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">140</span>
-            <span class="chapter-name"><strong>O despertar de Santo</strong><span>Capítulos 140 e 141</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>Martim tenta acalmar Iolanda enquanto a família atravessa novas tensões.</li>
-              <li>Tereza chega à aldeia e Santo desperta, alterando o rumo emocional de todos.</li>
-              <li>Luzia pede uma chance a Piedade, e Santo finalmente volta para casa.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">142</span>
-            <span class="chapter-name"><strong>A notícia corre por Grotas</strong><span>Capítulos 142 a 145</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>O retorno de Santo se espalha pela cidade e desperta reações intensas.</li>
-              <li>Luzia se enfurece, enquanto Tereza rompe com Carlos e Santo presta depoimento.</li>
-              <li>O reencontro entre Santo e Tereza ganha força, e Afrânio enfrenta Bento.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">146</span>
-            <span class="chapter-name"><strong>O poder muda de mãos</strong><span>Capítulos 146 a 148</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>Bento desafia Afrânio e é incentivado a entrar na disputa política.</li>
-              <li>Miguel enfrenta resistência entre os cooperados.</li>
-              <li>Carlos exige o posto de coronel, mas Afrânio já não deseja carregar esse símbolo.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">149</span>
-            <span class="chapter-name"><strong>A ameaça se aproxima</strong><span>Capítulos 149 e 150</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>Tereza confronta Carlos, e Afrânio também se volta contra ele.</li>
-              <li>Carlos manda prender Bento e intensifica sua ofensiva.</li>
-              <li>Santo flagra Carlos ameaçando Tereza.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">151</span>
-            <span class="chapter-name"><strong>A família sob pressão</strong><span>Capítulos 151 a 154</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>Carlos amplia as ameaças e tenta preservar seu domínio.</li>
-              <li>Martim procura tranquilizar Beatriz, mas a tensão continua crescendo.</li>
-              <li>Afrânio faz um acordo com Carlos, e Martim enfrenta os dois.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="chapter">
-          <summary>
-            <span class="chapter-number">155</span>
-            <span class="chapter-name"><strong>O dossiê vem à tona</strong><span>Capítulos 155 e 156</span></span>
-            <span class="chevron">+</span>
-          </summary>
-          <div class="chapter-body">
-            <ul>
-              <li>Zé Pirangueiro encontra Martim na canoa.</li>
-              <li>Martim encontra um dossiê capaz de deslocar as peças do jogo.</li>
-              <li>Carlos chantageia Tereza enquanto os conflitos caminham para o acerto final.</li>
-            </ul>
-          </div>
-        </details>
+      <div class="arc-block">
+        <div class="arc-head">
+          <div><span>Arco semanal 01</span><h3>O retorno muda todas as margens</h3></div>
+          <div class="arc-range">140–145</div>
+        </div>
+        <div class="chapter-list">
+          <details class="chapter">
+            <summary><span class="chapter-number">140</span><span class="chapter-name"><strong>O chamado da aldeia</strong><span>24 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Enquanto Martim tenta acalmar Iolanda, Carlos descobre que Tereza desapareceu e Afrânio passa a observar o genro com desconfiança. Guiada pela floresta, Tereza chega à aldeia indígena e participa do ritual de cura de Santo. Na cooperativa, Bento e Miguel procuram uma saída financeira para manter o projeto vivo. Encarnação tenta aproximar Martim do pai e insiste que Afrânio não é apenas o homem duro que o filho conhece. Ao fim da travessia, Santo desperta e chama por Tereza.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">141</span><span class="chapter-name"><strong>Santo volta para casa</strong><span>25 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Luzia pede a Piedade uma oportunidade de reparar seus erros, enquanto os cooperados resistem às novas propostas de cultivo apresentadas por Miguel. Ainda fragilizado, Santo tenta reconstruir a memória do atentado, e Tereza se inquieta com o alerta recebido da curandeira. Afrânio convida Martim para jantar com a família, mas Iolanda e Encarnação disputam a condução desse reencontro. Santo finalmente retorna à fazenda; ao encontrar Tereza ao lado dele, Luzia perde o controle e a expulsa. Miguel promete à mãe preservar o segredo diante de Santo.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">142</span><span class="chapter-name"><strong>A verdade fere a família</strong><span>26 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>A notícia de que Santo sobreviveu corre por Grotas, e Padre Benício confirma o retorno ao delegado. Queiroz avisa Carlos, enquanto todos cercam Santo em busca de respostas sobre o atentado. Temendo o que pode acontecer, Luzia pede a Bento que esconda informações do irmão, mas Santo percebe o comportamento estranho da família. Afrânio surpreende Martim examinando documentos da fazenda. No confronto mais doloroso, Luzia revela que Santo não é o pai de Olívia. Abalada, a jovem procura Miguel, e encontra em Santo o acolhimento de que precisa.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">143</span><span class="chapter-name"><strong>Suspeitas começam a ganhar nome</strong><span>27 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Luzia desabafa com Miguel, e Santo consola Olívia depois da revelação que abalou a família. Tereza comunica a Iolanda que pretende se separar de Carlos e se despede de Afrânio, decidida a mudar sua vida. Martim estranha a devoção de Cícero ao coronel e passa a olhar Carlos com desconfiança. No bar, Chico Criatura se recusa a entregar a Queiroz o que sabe sobre o atentado. Santo presta depoimento ao delegado, enquanto Beatriz organiza um abaixo-assinado contra os vereadores e transforma a indignação de Grotas em movimento popular.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">144</span><span class="chapter-name"><strong>Uma noite para Santo e Tereza</strong><span>29 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Santo garante a Tereza que não aceitará uma nova separação, e os dois passam a noite juntos, retomando o amor interrompido por tantos anos. Ao mesmo tempo, Martim divide com Iolanda suas suspeitas sobre Carlos, e Encarnação cobra de Afrânio uma reação às atitudes do genro. Carlos procura aliados em Brasília, preparando sua defesa política. Beatriz e Piedade percebem o sofrimento de Luzia, enquanto Bento conversa com Olívia sobre Miguel. Movida pela dor e pelo medo de perder Santo, Luzia segue até a casa de Bento para confrontar a situação.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">145</span><span class="chapter-name"><strong>O jantar que reúne os lados</strong><span>30 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Bento desafia Afrânio diante do povo e leva adiante a emenda que pode alterar o equilíbrio político de Grotas. Santo retorna à cooperativa e tenta conter o conflito entre Miguel e os produtores, que ainda desconfiam das novas formas de plantio. Iolanda visita Tereza e decide reunir a família num jantar na fazenda, convidando Miguel e Olívia. Encarnação conhece a jovem apresentada pelo neto, e a presença de todos parece abrir uma passagem para a reconciliação. A chegada inesperada de Carlos, porém, devolve a tensão à mesa.</p></div>
+          </details>
+        </div>
       </div>
+
+      <div class="arc-block">
+        <div class="arc-head">
+          <div><span>Arco semanal 02</span><h3>O poder começa a trocar de mãos</h3></div>
+          <div class="arc-range">146–151</div>
+        </div>
+        <div class="chapter-list">
+          <details class="chapter">
+            <summary><span class="chapter-number">146</span><span class="chapter-name"><strong>A candidatura de Bento</strong><span>31 de agosto de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Carlos percebe que já não encontra em Afrânio o mesmo apoio e se surpreende com a hostilidade do sogro. Bento é convidado a disputar a prefeitura de Grotas, mas ainda entra em choque com Santo por permitir que Olívia participe do jantar na fazenda dos Sá Ribeiro. Beatriz tenta amparar Luzia, que sofre com a aproximação entre Santo e Tereza. Iolanda enfrenta Carlos abertamente, enquanto Encarnação se incomoda com a aparente passividade de Afrânio. Tereza teme os próximos movimentos do marido, e o confronto entre Carlos e o coronel se torna inevitável.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">147</span><span class="chapter-name"><strong>O título de coronel em disputa</strong><span>1º de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Olívia estranha a maneira como Luzia fala de Carlos, e Santo sente que Tereza corre perigo. Ambicioso, Carlos exige de Afrânio o posto de coronel Saruê, como se o título pudesse transferir para ele toda a força construída pela família. Dalva pede que Cícero abandone aquela guerra e vá embora com ela. Martim enfrenta Carlos, enquanto Afrânio confessa a Encarnação que já não quer carregar o nome de coronel. Carlos intimida o prefeito Raimundo, provoca Santo na rua e invade o quarto de Tereza, mostrando que está disposto a usar o medo para conservar o poder.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">148</span><span class="chapter-name"><strong>Grotas reage a Carlos</strong><span>2 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Tereza enfrenta Carlos, e Cícero incentiva Afrânio a impedir que o genro tome o comando da família. Afrânio finalmente confronta o deputado. Enquanto isso, a cooperativa conquista uma nova venda e os pequenos produtores reconhecem o trabalho de Miguel e Olívia, sinalizando que o projeto começa a criar raízes. Lucas acompanha Isabel, Piedade e Luzia até a Associação das Rendeiras. Encarnação manda Cícero vigiar Carlos, e Afrânio tenta reconstruir o diálogo com Iolanda. Na praça, Bento interrompe o discurso de Carlos e transforma o descontentamento popular em desafio aberto.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">149</span><span class="chapter-name"><strong>O povo ocupa a praça</strong><span>3 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Carlos manda prender Bento e tenta sufocar a oposição, mas Padre Benício conduz o povo até a igreja e Beatriz faz um discurso contra os abusos do deputado. Martim se une aos dois na revolta que toma Grotas. Luzia pede a Santo que não se afaste das filhas, e Olívia tenta confortá-la. Carlos volta a intimidar Bento e ameaça Tereza, sendo surpreendido por Santo, que reage com fúria. Diante da coragem de Beatriz, Bento e Padre Benício tentam convencê-la a entrar na política. Carlos, por sua vez, procura Luzia e promete impedir a união de Santo e Tereza.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">150</span><span class="chapter-name"><strong>A retaliação chega à escola</strong><span>5 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Iolanda conversa com Martim e critica a forma como Afrânio tratou os próprios filhos. Tereza decide procurar o pai, enquanto Encarnação mostra a Carlos que não se deixará intimidar. A aproximação entre Martim e Afrânio avança, embora as ameaças do deputado contra Tereza mantenham a família sob tensão. Encarnação reprova Iolanda por ter abandonado o marido. Na escola, Beatriz recebe a notícia de sua transferência. Ao ver o secretário de Educação ao lado de Carlos, Martim percebe que a medida não é administrativa: trata-se de uma retaliação contra quem ousou enfrentar o poder local.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">151</span><span class="chapter-name"><strong>Martim é expulso pelo pai</strong><span>6 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Martim tenta tranquilizar Beatriz e a convence a contar a Bento o que aconteceu na escola. Luzia se anima ao perceber que Santo e Tereza estão em conflito e procura se aproximar do marido. Lucas e Sophie estranham o comportamento de Chico Criatura. Depois de discutir com Tereza, Santo pede que Miguel inicie a transição da produção para os orgânicos. Bento insiste para que Beatriz aceite disputar a prefeitura. Entre uma partida de xadrez e antigas mágoas, Martim e Afrânio voltam a se aproximar, mas o equilíbrio se desfaz quando Afrânio ordena que o filho deixe Grotas.</p></div>
+          </details>
+        </div>
+      </div>
+
+      <div class="arc-block">
+        <div class="arc-head">
+          <div><span>Arco semanal 03</span><h3>O dossiê abre uma nova correnteza</h3></div>
+          <div class="arc-range">152–156</div>
+        </div>
+        <div class="chapter-list">
+          <details class="chapter">
+            <summary><span class="chapter-number">152</span><span class="chapter-name"><strong>Encarnação escolhe um aliado</strong><span>7 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Bento acolhe Beatriz depois da perseguição sofrida na escola e insiste para que ela considere a candidatura à prefeitura. Santo reafirma a Miguel a decisão de transformar a fazenda por meio da produção orgânica, e o jovem comemora com Olívia a mudança do pai. Afrânio expulsa Martim da cidade, mas Encarnação cobra do filho uma posição firme contra Carlos. Iolanda aconselha Tereza a não esconder a verdade de Santo, enquanto Doninha e Cícero temem pelo destino dela. Percebendo que a família precisa de ajuda externa, Encarnação procura Bento com o auxílio de Cícero.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">153</span><span class="chapter-name"><strong>O documento secreto</strong><span>8 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Encarnação conversa em segredo com Bento e entrega a ele um documento ligado às irregularidades que cercam a prefeitura. Cícero procura Santo para falar sobre a situação de Tereza. Temendo que Carlos ataque Martim, Afrânio exige que o genro preserve a segurança do filho. No Bar do Chico, Afrânio e Carlos são enfrentados pelo fotojornalista. Bento esconde de Martim o material recebido, mas Queiroz descobre o encontro e avisa Carlos. Beatriz rejeita a ideia de Bento retomar a investigação, e Martim se incomoda com a dureza dela. Encarnação promete impedir que Carlos fique com o patrimônio da família.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">154</span><span class="chapter-name"><strong>O pressentimento de Ceci</strong><span>9 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Martim discute com Bento, e Beatriz toma a defesa do vereador. Bento então explica a ela como conseguiu pistas do esquema que envolve a prefeitura. Afrânio sofre com o afastamento do filho e, antes da partida, faz uma confissão a Martim. O fotojornalista pede que Beatriz seja honesta sobre o que sente e decide seguir seu caminho. Ceci percebe uma sombra sobre essa despedida e tem um forte pressentimento. Zé Pirangueiro encontra Martim dormindo em uma canoa, enquanto Luzia e Piedade notam a ausência de Beatriz. Iolanda observa os olhares de Martim e entende o afeto que nasceu entre os dois.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">155</span><span class="chapter-name"><strong>Martim encontra o dossiê</strong><span>10 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Martim encontra o dossiê entregue por Encarnação a Bento e pede ao vereador que abandone a investigação, temendo o alcance dos inimigos envolvidos. Ceci presenteia o fotojornalista, mas continua tomada por um mau pressentimento. Encarnação discute com Iolanda, que confidencia a Dalva sua intenção de deixar a fazenda. No Bar do Chico, Carlos provoca Bento e tenta recuperar o controle pelo confronto. Tereza é chantageada pelo marido. Bento decide interromper a investigação e se une a Beatriz na construção de uma campanha política, escolha que enfurece Encarnação e deixa Martim sozinho diante das provas.</p></div>
+          </details>
+          <details class="chapter">
+            <summary><span class="chapter-number">156</span><span class="chapter-name"><strong>A investigação segue pelo rio</strong><span>12 de setembro de 2016</span></span><span class="chevron">+</span></summary>
+            <div class="chapter-body"><p>Ceci reza por Martim, enquanto Queiroz tenta convencer Carlos de que o rapaz deixou a região. Bento e Beatriz elaboram o plano de governo para a campanha, despertando a revolta do prefeito Raimundo e a preocupação dos aliados de Carlos. Lucas avisa a Santo que a fazenda poderá ser usada para financiar o projeto de Miguel e Olívia, e o agricultor teme perder sua terra. Afrânio volta a declarar guerra aos Dos Anjos. Longe de Grotas, Martim se instala numa comunidade ribeirinha e segue as pistas do dossiê, fotografando a empresa ligada ao esquema que pretende revelar.</p></div>
+          </details>
+        </div>
+      </div>
+
+      <p class="summary-source">Resumos editoriais elaborados a partir da numeração e das descrições do <a href="https://globoplay.globo.com/velho-chico/t/p5ZwJzW6Gh/" target="_blank" rel="noopener">Globoplay</a> e dos arquivos semanais do <a href="https://gshow.globo.com/novelas/velho-chico/" target="_blank" rel="noopener">Gshow</a>.</p>
     </section>
 
     <section class="section" id="trilha">
