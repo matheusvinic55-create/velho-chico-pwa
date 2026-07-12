@@ -131,6 +131,27 @@
       font-size: .82rem;
       text-transform: uppercase;
     }
+    .finale-badge {
+      color: #f4cb72;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-shadow:
+        0 0 7px rgba(244,203,114,.62),
+        0 0 18px rgba(201,143,69,.36);
+      animation: finalePulse 1.45s ease-in-out infinite;
+    }
+    @keyframes finalePulse {
+      0%, 100% {
+        opacity: 1;
+        filter: brightness(1.14);
+        text-shadow: 0 0 8px rgba(244,203,114,.72), 0 0 20px rgba(201,143,69,.42);
+      }
+      50% {
+        opacity: .58;
+        filter: brightness(.88);
+        text-shadow: 0 0 3px rgba(244,203,114,.3), 0 0 9px rgba(201,143,69,.2);
+      }
+    }
     .brand-mark {
       width: 34px;
       height: 34px;
@@ -1324,7 +1345,7 @@
     <div class="topbar">
       <div class="brand">
         <label class="brand-mark" id="menuOpen" for="menuToggle" role="button" tabindex="0" aria-label="Abrir menu do portal" aria-controls="menuDrawer" aria-expanded="false">≈</label>
-        <span>A alma do rio</span>
+        <span class="finale-badge">Reta final</span>
       </div>
       <button class="icon-button" id="photoOpen" type="button" aria-label="Adicionar foto do barqueiro">
         <svg viewBox="0 0 24 24" aria-hidden="true">
