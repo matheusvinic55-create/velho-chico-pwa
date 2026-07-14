@@ -691,12 +691,51 @@
       .calls-link { grid-column: 2; justify-self: start; margin-top: 2px; }
     }
 
+    .summary-arcs {
+      display: flex;
+      gap: 8px;
+      margin: 28px -20px 0;
+      padding: 0 20px 9px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline proximity;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .summary-arcs::-webkit-scrollbar { display: none; }
+    .summary-arcs button {
+      min-height: 42px;
+      flex: 0 0 auto;
+      padding: 9px 15px;
+      border: 1px solid var(--river);
+      border-radius: 999px;
+      color: var(--river);
+      background: transparent;
+      font: inherit;
+      font-size: .74rem;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+      scroll-snap-align: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .summary-arcs button[aria-selected="true"] {
+      color: var(--white);
+      background: var(--river);
+    }
+    .summary-arcs button:active { transform: scale(.98); }
     .chapter-list {
       display: grid;
-      gap: 12px;
+      gap: 9px;
       margin-top: 16px;
     }
-    .arc-block { margin-top: 34px; }
+    .arc-block { margin-top: 22px; animation: arc-arrival .28s ease both; }
+    .arc-block[hidden] { display: none; }
+    @keyframes arc-arrival {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: none; }
+    }
     .arc-head {
       display: flex;
       align-items: end;
@@ -742,18 +781,18 @@
     }
     summary::-webkit-details-marker { display: none; }
     .chapter summary, .album summary {
-      padding: 19px 20px;
+      padding: 15px 16px;
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 14px;
     }
     .chapter-number {
-      width: 46px;
-      height: 46px;
+      width: 42px;
+      height: 42px;
       display: grid;
       place-items: center;
-      border-radius: 15px;
+      border-radius: 14px;
       background: var(--paper-2);
       color: var(--terracotta);
       font-weight: 830;
@@ -1510,7 +1549,14 @@
         <a class="calls-link" href="https://youtube.com/playlist?list=PLCG86DHec6YHZoOIXH012S0YdeupJS086" target="_blank" rel="noopener" aria-label="Assistir à playlist das chamadas de Velho Chico no YouTube">Assistir à playlist&nbsp; ↗</a>
       </aside>
 
-      <div class="arc-block">
+      <nav class="summary-arcs" aria-label="Escolha um arco semanal" role="tablist">
+        <button type="button" role="tab" aria-selected="true" data-summary-tab="0">140–145 · O retorno</button>
+        <button type="button" role="tab" aria-selected="false" data-summary-tab="1" tabindex="-1">146–151 · O poder</button>
+        <button type="button" role="tab" aria-selected="false" data-summary-tab="2" tabindex="-1">152–157 · O dossiê</button>
+        <button type="button" role="tab" aria-selected="false" data-summary-tab="3" tabindex="-1">158–160 · As provas</button>
+      </nav>
+
+      <div class="arc-block" data-summary-arc="0" role="tabpanel">
         <div class="arc-head">
           <div><span>Arco semanal 01</span><h3>O retorno muda todas as margens</h3></div>
           <div class="arc-range">140–145</div>
@@ -1543,7 +1589,7 @@
         </div>
       </div>
 
-      <div class="arc-block">
+      <div class="arc-block" data-summary-arc="1" role="tabpanel" hidden>
         <div class="arc-head">
           <div><span>Arco semanal 02</span><h3>O poder começa a trocar de mãos</h3></div>
           <div class="arc-range">146–151</div>
@@ -1576,7 +1622,7 @@
         </div>
       </div>
 
-      <div class="arc-block">
+      <div class="arc-block" data-summary-arc="2" role="tabpanel" hidden>
         <div class="arc-head">
           <div><span>Arco semanal 03</span><h3>O dossiê abre uma nova correnteza</h3></div>
           <div class="arc-range">152–157</div>
@@ -1609,7 +1655,7 @@
         </div>
       </div>
 
-      <div class="arc-block">
+      <div class="arc-block" data-summary-arc="3" role="tabpanel" hidden>
         <div class="arc-head">
           <div><span>Arco semanal 04</span><h3>As provas chegam perto demais</h3></div>
           <div class="arc-range">158–160</div>
@@ -1974,6 +2020,28 @@
         clearTimeout(showToast.timer);
         showToast.timer = setTimeout(() => toast.classList.remove("visible"), 2600);
       }
+
+      // Resumos: um arco semanal por vez, com navegação horizontal compacta.
+      const summaryTabs = $$('[data-summary-tab]');
+      const summaryArcs = $$('[data-summary-arc]');
+
+      function selectSummaryArc(index, moveTab = false) {
+        const safeIndex = Math.max(0, Math.min(summaryArcs.length - 1, Number(index) || 0));
+        summaryTabs.forEach((tab, tabIndex) => {
+          const selected = tabIndex === safeIndex;
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+        });
+        summaryArcs.forEach((arc, arcIndex) => {
+          arc.hidden = arcIndex !== safeIndex;
+          if (arc.hidden) $$('details[open]', arc).forEach(item => item.removeAttribute('open'));
+        });
+        localStorage.setItem('velho-chico-summary-arc', String(safeIndex));
+        if (moveTab) summaryTabs[safeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+
+      summaryTabs.forEach((tab, index) => tab.addEventListener('click', () => selectSummaryArc(index, true)));
+      selectSummaryArc(localStorage.getItem('velho-chico-summary-arc'));
 
       // Menu lateral
       const menuToggle = $("#menuToggle");
