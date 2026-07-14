@@ -622,6 +622,75 @@
       border-radius: inherit;
     }
 
+    .calls-card {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 16px;
+      color: var(--river);
+      background: rgba(255, 253, 248, .66);
+      border: 1px solid rgba(169, 85, 59, .22);
+      border-radius: 20px;
+      box-shadow: 0 9px 28px rgba(16, 35, 33, .045);
+    }
+    .calls-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: linear-gradient(145deg, var(--terracotta), var(--gold));
+      box-shadow: 0 8px 20px rgba(169, 85, 54, .18);
+    }
+    .calls-icon svg { width: 18px; height: 18px; margin-left: 2px; }
+    .calls-copy small {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--terracotta);
+      font-size: .64rem;
+      font-weight: 820;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .calls-copy strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-weight: 620;
+      line-height: 1.15;
+    }
+    .calls-copy span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .74rem;
+      line-height: 1.35;
+    }
+    .calls-link {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--river);
+      background: var(--white);
+      border: 1px solid var(--line);
+      font-size: .74rem;
+      font-weight: 760;
+      white-space: nowrap;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .calls-link:hover { transform: translateY(-1px); border-color: var(--terracotta); }
+    @media (max-width: 520px) {
+      .calls-card { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; }
+      .calls-icon { width: 42px; height: 42px; }
+      .calls-link { grid-column: 2; justify-self: start; margin-top: 2px; }
+    }
+
     .chapter-list {
       display: grid;
       gap: 12px;
@@ -1428,6 +1497,18 @@
         </div>
         <div class="track" aria-label="Arquivo dos capítulos 140 a 160 completo"><i></i></div>
       </div>
+
+      <aside class="calls-card" aria-label="Playlist das chamadas de Velho Chico">
+        <span class="calls-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.6v12.8c0 .78.86 1.26 1.53.85l10.03-6.4a1 1 0 0 0 0-1.7L9.53 4.75A1 1 0 0 0 8 5.6Z"/></svg>
+        </span>
+        <span class="calls-copy">
+          <small>Arquivo em vídeo</small>
+          <strong>Chamadas de Velho Chico</strong>
+          <span>Reveja os convites que anunciaram cada trecho da travessia.</span>
+        </span>
+        <a class="calls-link" href="https://youtube.com/playlist?list=PLCG86DHec6YHZoOIXH012S0YdeupJS086" target="_blank" rel="noopener" aria-label="Assistir à playlist das chamadas de Velho Chico no YouTube">Assistir à playlist&nbsp; ↗</a>
+      </aside>
 
       <div class="arc-block">
         <div class="arc-head">
