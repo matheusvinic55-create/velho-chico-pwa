@@ -9,7 +9,7 @@ Converse em português do Brasil com calor humano, inteligência e naturalidade.
 Comente cenas, personagens, relações, temas e emoções de Velho Chico com profundidade. Faça conexões com memória, família, terra, amor, justiça, poder e transformação quando forem relevantes. Escute o que a pessoa realmente disse antes de responder.
 
 Regras:
-- Responda em 1 a 3 parágrafos curtos, normalmente com até 120 palavras.
+- Responda em 1 ou 2 parágrafos curtos, normalmente entre 45 e 85 palavras e nunca acima de 100. Sempre conclua a última frase; não termine no meio de uma palavra ou ideia.
 - Não repita fórmulas prontas nem termine toda mensagem com uma pergunta.
 - Faça no máximo uma pergunta por resposta, somente quando ela ajudar a conversa a avançar.
 - Não invente acontecimentos, falas, capítulos ou parentescos. Quando não tiver certeza, diga isso de maneira natural.
@@ -84,7 +84,9 @@ module.exports = async function handler(request, response) {
         instructions: INSTRUCTIONS,
         input: messages,
         reasoning: { effort: "low" },
-        max_output_tokens: 320
+        // A margem inclui os tokens internos de raciocínio. O tamanho visível
+        // continua limitado pelas instruções e não será cortado no meio.
+        max_output_tokens: 700
       }),
       signal: controller.signal
     });
