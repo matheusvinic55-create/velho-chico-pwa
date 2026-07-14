@@ -1437,6 +1437,179 @@
     @media (min-width: 1020px) {
       .cast-grid { grid-template-columns: repeat(3, 1fr); }
     }
+
+    /* Escala editorial compartilhada com O Bem-Amado.
+       Preserva a identidade de Velho Chico e iguala apenas proporções. */
+    .section {
+      padding: 64px 20px;
+    }
+    .section-kicker {
+      margin-bottom: 10px;
+      font-size: .68rem;
+      letter-spacing: .16em;
+    }
+    .section-title,
+    #bar .section-title {
+      font-size: clamp(2rem, 6vw, 3.85rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+    .section-lead,
+    #bar .section-lead {
+      max-width: 700px;
+      margin-top: 16px;
+      font-size: .96rem;
+      line-height: 1.58;
+    }
+    .synopsis-grid {
+      gap: 24px;
+      margin-top: 30px;
+    }
+    .quote-card blockquote {
+      font-size: clamp(1.55rem, 4.7vw, 2.25rem);
+      line-height: 1.1;
+    }
+    .quote-card cite {
+      font-size: .74rem;
+    }
+    .fact {
+      padding: 15px 2px 21px;
+      gap: 13px;
+    }
+    .fact strong {
+      font-size: 1.2rem;
+    }
+    .fact span {
+      font-size: .8rem;
+      line-height: 1.45;
+    }
+    .progress-card {
+      margin-top: 28px;
+      padding: 17px;
+      border-radius: 20px;
+    }
+    .progress-top strong { font-size: .94rem; }
+    .progress-top span { font-size: .76rem; }
+    .arc-head h3 { font-size: 1.42rem; }
+    .chapter summary,
+    .album summary {
+      padding: 12px;
+      gap: 12px;
+    }
+    .chapter-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      font-size: .92rem;
+    }
+    .chapter-name strong,
+    .album-name strong {
+      font-size: .88rem;
+      line-height: 1.2;
+    }
+    .chapter-name span,
+    .album-name span {
+      font-size: .72rem;
+    }
+    .chevron {
+      width: 34px;
+      height: 34px;
+      font-size: 1.05rem;
+    }
+    .chapter-body,
+    .album-body {
+      padding: 0 13px 16px;
+      font-size: .84rem;
+      line-height: 1.58;
+    }
+    .album-list {
+      margin-top: 24px;
+      gap: 9px;
+    }
+    .album-badge {
+      width: 41px;
+      height: 41px;
+      font-size: .76rem;
+    }
+    .song-list li {
+      grid-template-columns: 27px minmax(0, 1fr) 34px;
+      gap: 9px;
+      padding: 9px 0;
+      font-size: .79rem;
+    }
+    .song-list small { font-size: .68rem; }
+    .song-play {
+      width: 32px;
+      height: 32px;
+    }
+    .cast-grid { margin-top: 26px; }
+    .person {
+      min-height: 76px;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 13px;
+      padding: 12px 0 18px;
+    }
+    .person-photo {
+      width: 52px;
+      height: 52px;
+    }
+    .person strong {
+      font-size: 1.06rem;
+    }
+    .person span {
+      margin-top: 3px;
+      font-size: .72rem;
+      line-height: 1.38;
+    }
+    .feature-section { padding: 64px 0; }
+    .quiz-card {
+      margin-top: 26px;
+      padding: clamp(18px, 4vw, 32px);
+      border-radius: 23px;
+    }
+    .quiz-meta { font-size: .72rem; }
+    .question h3 {
+      font-size: 1.42rem;
+      margin-bottom: 17px;
+    }
+    .answer {
+      padding: 12px 13px;
+      border-radius: 14px;
+      font-size: .88rem;
+    }
+    .quiz-result h3 { font-size: 2rem; }
+    .result-photo {
+      width: 90px;
+      height: 90px;
+    }
+    .drawer-nav a {
+      min-height: 53px;
+      font-size: 1.28rem;
+    }
+    .river-footer strong {
+      font-size: clamp(2.4rem, 8vw, 4.6rem);
+    }
+    .river-footer .footer-subtitle { font-size: 1rem; }
+
+    @media (max-width: 760px) {
+      .section { padding: 58px 20px; }
+      #bar {
+        padding-top: 54px;
+        padding-bottom: 54px;
+      }
+      .section-title,
+      #bar .section-title {
+        font-size: clamp(2rem, 8vw, 2.85rem);
+        line-height: 1.02;
+      }
+      .section-lead,
+      #bar .section-lead { font-size: .92rem; }
+      .quote-card { padding-left: 20px; }
+      .quote-card blockquote { font-size: 1.55rem; }
+      .arc-head h3 { font-size: 1.32rem; }
+      .chapter-body,
+      .album-body { padding-left: 13px; }
+    }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
