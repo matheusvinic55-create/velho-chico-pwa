@@ -478,7 +478,15 @@
     #resumos { --section-tone: #f0ddca; --section-accent: #a9573b; }
     #trilha  { --section-tone: #f5e2bd; --section-accent: #bd7e25; }
     #elenco  { --section-tone: #e3ece5; --section-accent: #416f5c; }
-    #bar     { --section-tone: #efddd3; --section-accent: #985a43; }
+    #bar     {
+      --section-tone: #efddd3;
+      --section-accent: #985a43;
+      padding-top: 60px;
+      padding-bottom: 60px;
+      scroll-margin-top: calc(22px + env(safe-area-inset-top));
+    }
+    #bar .section-title { font-size: clamp(2.15rem, 7.5vw, 3.8rem); }
+    #bar .section-lead { max-width: 620px; font-size: .96rem; line-height: 1.55; margin-top: 14px; }
     .section + .section { border-top: 1px solid var(--line); }
     .section-kicker {
       margin: 0 0 9px;
@@ -1054,19 +1062,19 @@
     }
 
     .bar-card {
-      margin-top: 32px;
+      margin-top: 22px;
       display: grid;
       gap: 13px;
     }
     .chat-shell {
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 26px;
+      border-radius: 22px;
       background: var(--white);
       box-shadow: var(--shadow);
     }
     .chat-head {
-      padding: 15px 17px;
+      padding: 11px 13px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -1076,8 +1084,8 @@
         linear-gradient(145deg, var(--river-2), var(--night));
     }
     .chat-avatar {
-      width: 46px;
-      height: 46px;
+      width: 40px;
+      height: 40px;
       flex: 0 0 auto;
       display: block;
       border-radius: 50%;
@@ -1087,14 +1095,14 @@
       object-position: center;
       box-shadow: 0 5px 16px rgba(0,0,0,.2);
     }
-    .chat-identity strong { display: block; font-size: .96rem; }
+    .chat-identity strong { display: block; font-size: .9rem; }
     .chat-identity span {
       display: flex;
       align-items: center;
       gap: 6px;
       margin-top: 2px;
       color: rgba(255,255,255,.62);
-      font-size: .72rem;
+      font-size: .66rem;
     }
     .chat-identity span::before {
       content: "";
@@ -1105,13 +1113,14 @@
       box-shadow: 0 0 0 3px rgba(143,201,167,.12);
     }
     .chat-messages {
-      min-height: 340px;
-      max-height: 520px;
+      height: clamp(255px, 40svh, 350px);
+      min-height: 0;
+      max-height: none;
       overflow-y: auto;
-      padding: 18px 14px;
+      padding: 12px 10px;
       display: flex;
       flex-direction: column;
-      gap: 11px;
+      gap: 8px;
       background:
         radial-gradient(circle at 12% 0%, rgba(201,143,69,.08), transparent 30%),
         var(--paper);
@@ -1121,9 +1130,9 @@
     .chat-message.user { justify-content: flex-end; }
     .chat-bubble {
       width: fit-content;
-      max-width: 86%;
-      padding: 10px 12px 8px;
-      border-radius: 17px 17px 17px 5px;
+      max-width: 90%;
+      padding: 9px 10px 7px;
+      border-radius: 15px 15px 15px 5px;
       background: var(--white);
       border: 1px solid var(--line);
       box-shadow: 0 5px 15px rgba(16,35,33,.055);
@@ -1131,7 +1140,7 @@
     .chat-message.user .chat-bubble {
       color: white;
       border-color: transparent;
-      border-radius: 17px 17px 5px 17px;
+      border-radius: 15px 15px 5px 15px;
       background: var(--river);
     }
     .chat-bubble strong {
@@ -1144,8 +1153,8 @@
     .chat-bubble p {
       margin: 0;
       white-space: pre-wrap;
-      font-size: .9rem;
-      line-height: 1.47;
+      font-size: .82rem;
+      line-height: 1.43;
     }
     .chat-bubble time {
       color: var(--muted);
@@ -1206,7 +1215,7 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 11px 13px 4px;
+      padding: 8px 10px 2px;
       scrollbar-width: none;
     }
     .chat-suggestions::-webkit-scrollbar { display: none; }
@@ -1214,29 +1223,29 @@
       flex: 0 0 auto;
       border: 1px solid rgba(23,60,59,.16);
       border-radius: 999px;
-      padding: 8px 11px;
+      padding: 7px 9px;
       color: var(--river);
       background: rgba(23,60,59,.045);
-      font-size: .75rem;
+      font-size: .68rem;
       cursor: pointer;
     }
     .chat-compose {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 46px;
+      grid-template-columns: minmax(0, 1fr) 44px;
       align-items: end;
       gap: 9px;
-      padding: 9px 12px 13px;
+      padding: 8px 10px 10px;
       background: var(--white);
     }
     .chat-compose textarea {
       width: 100%;
-      min-height: 46px;
-      max-height: 120px;
+      min-height: 44px;
+      max-height: 88px;
       resize: vertical;
       border: 1px solid var(--line);
       border-radius: 18px;
       outline: 0;
-      padding: 12px 13px;
+      padding: 11px 12px;
       color: var(--ink);
       background: var(--paper);
       font-size: 16px;
@@ -1244,8 +1253,8 @@
     }
     .chat-compose textarea:focus { border-color: rgba(36,86,83,.48); }
     .chat-send {
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
       border: 0;
@@ -1925,8 +1934,8 @@
       <p class="section-kicker">Espaço de prosa</p>
       <h2 class="section-title">Bar do Chico.</h2>
       <p class="section-lead">
-        Chegue mais e puxe uma cadeira. Conte o que o capítulo deixou em você e deixe a
-        prosa seguir no ritmo das águas. A conversa fica guardada somente neste aparelho.
+        Chegue mais, puxe uma cadeira e conte o que o capítulo deixou em você.
+        A conversa fica guardada somente neste aparelho.
       </p>
 
       <div class="bar-card">
