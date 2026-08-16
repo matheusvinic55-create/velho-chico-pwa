@@ -5,14 +5,14 @@
       "includeFiles": "index.html"
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/",
-      "destination": "/api/app"
+      "src": "^/$",
+      "dest": "/api/app.js"
     },
     {
-      "source": "/index.html",
-      "destination": "/api/app"
+      "src": "^/index\\.html$",
+      "dest": "/api/app.js"
     }
   ]
 }
